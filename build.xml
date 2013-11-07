@@ -25,7 +25,7 @@
 
     <property name="dir.target.dist" location="target/dist" />
 
-    <property file="build-local.properties" />
+    <property file="build-local.properties"/>
 
     <path id="main.classpath">
         <fileset dir="lib" includes="**/*.jar" />
@@ -51,7 +51,7 @@
     <!-- ================================= 
           target: default              
          ================================= -->
-    <target name="compile" depends="clean, precompile, init" description="description">
+    <target name="compile" depends="clean, init, precompile" description="description">
         <javac srcdir="${dir.gen.java}" destdir="${dir.gen.classes}" includeAntRuntime="false" debug="true">
             <classpath refid="main.classpath" />
         </javac>
