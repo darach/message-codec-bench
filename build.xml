@@ -8,86 +8,86 @@
      barkerm                                                                
      ====================================================================== -->
 <project name="project" default="compile">
-	<description>
+    <description>
             description
     </description>
 
-	<property name="dir.main.java" location="main/java"/>
-	<property name="dir.main.classes" location="target/main/classes"/>
-	
-    <property name="dir.apt.java" location="target/gen/java"/>
-	
-	<property name="dir.gen.java" location="target/gen/java"/>
-	<property name="dir.gen.classes" location="target/gen/classes"/>
-	
-	<property name="dir.resources.sbe" location="main/resources/sbe"/>
-	<property name="dir.resources.protobuf" location="main/resources/protobuf"/>
-	
-	<property name="dir.target.dist" location="target/dist"/>
-	
-	<property file="build-local.properties"/>
+    <property name="dir.main.java" location="main/java" />
+    <property name="dir.main.classes" location="target/main/classes" />
 
-	<path id="main.classpath">
-		<fileset dir="lib" includes="**/*.jar"/>
-	</path>
+    <property name="dir.apt.java" location="target/gen/java" />
 
-	<path id="build.classpath">
-		<path refid="main.classpath"/>
-		<pathelement location="${dir.gen.classes}"/>
-	</path>
+    <property name="dir.gen.java" location="target/gen/java" />
+    <property name="dir.gen.classes" location="target/gen/classes" />
 
-	<target name="init">
-		<mkdir dir="${dir.main.classes}"/>
-        <mkdir dir="${dir.apt.java}"/>
-		<mkdir dir="${dir.gen.java}"/>
-		<mkdir dir="${dir.gen.classes}"/>
-		<mkdir dir="${dir.target.dist}"/>
-	</target>
-	
-	<target name="clean">
-	   <delete dir="target" failonerror="false"/>
-	</target>
+    <property name="dir.resources.sbe" location="main/resources/sbe" />
+    <property name="dir.resources.protobuf" location="main/resources/protobuf" />
 
-	<!-- ================================= 
+    <property name="dir.target.dist" location="target/dist" />
+
+    <property file="build-local.properties" />
+
+    <path id="main.classpath">
+        <fileset dir="lib" includes="**/*.jar" />
+    </path>
+
+    <path id="build.classpath">
+        <path refid="main.classpath" />
+        <pathelement location="${dir.gen.classes}" />
+    </path>
+
+    <target name="init">
+        <mkdir dir="${dir.main.classes}" />
+        <mkdir dir="${dir.apt.java}" />
+        <mkdir dir="${dir.gen.java}" />
+        <mkdir dir="${dir.gen.classes}" />
+        <mkdir dir="${dir.target.dist}" />
+    </target>
+
+    <target name="clean">
+        <delete dir="target" failonerror="false" />
+    </target>
+
+    <!-- ================================= 
           target: default              
          ================================= -->
-	<target name="compile" depends="clean, precompile, init" description="description">
-		<javac srcdir="${dir.gen.java}" destdir="${dir.gen.classes}" includeAntRuntime="false" debug="true">
-			<classpath refid="main.classpath"/>
-		</javac>
-		<javac srcdir="${dir.main.java}" destdir="${dir.main.classes}" includeAntRuntime="false" debug="true">
-			<classpath refid="build.classpath"/>
-			<compilerarg value="-s"/>
-			<compilerarg value="${dir.apt.java}"/>
-		</javac>
-		
+    <target name="compile" depends="clean, precompile, init" description="description">
+        <javac srcdir="${dir.gen.java}" destdir="${dir.gen.classes}" includeAntRuntime="false" debug="true">
+            <classpath refid="main.classpath" />
+        </javac>
+        <javac srcdir="${dir.main.java}" destdir="${dir.main.classes}" includeAntRuntime="false" debug="true">
+            <classpath refid="build.classpath" />
+            <compilerarg value="-s" />
+            <compilerarg value="${dir.apt.java}" />
+        </javac>
+
         <jar destfile="${dir.target.dist}/microbenchmarks.jar">
             <manifest>
-                <attribute name="Main-Class" value="org.openjdk.jmh.Main"/>
+                <attribute name="Main-Class" value="org.openjdk.jmh.Main" />
             </manifest>
-            <fileset dir="${dir.main.classes}" includes="**/*"/>
-            <fileset dir="${dir.gen.classes}" includes="**/*"/>
-            <zipgroupfileset dir="lib" includes="**/*.jar"/>
+            <fileset dir="${dir.main.classes}" includes="**/*" />
+            <fileset dir="${dir.gen.classes}" includes="**/*" />
+            <zipgroupfileset dir="lib" includes="**/*.jar" />
         </jar>
-	</target>
+    </target>
 
-	<target name="precompile" depends="init">
+    <target name="precompile" depends="init">
 
-		<fail unless="protobuf.home" message="Property protobuf.home is not defined (you can add a build-local.properties and define it there." />
+        <fail unless="protobuf.home" message="Property protobuf.home is not defined (you can add a build-local.properties and define it there." />
 
-		<java classname="uk.co.real_logic.sbe.SbeTool">
-			<classpath refid="main.classpath"/>
-			<sysproperty key="sbe.output.dir" value="${dir.gen.java}"/>
-			<sysproperty key="sbe.target.language" value="Java"/>
-			<arg value="${dir.resources.sbe}/TestSchema.xml"/>
-		</java>
+        <java classname="uk.co.real_logic.sbe.SbeTool">
+            <classpath refid="main.classpath" />
+            <sysproperty key="sbe.output.dir" value="${dir.gen.java}" />
+            <sysproperty key="sbe.target.language" value="Java" />
+            <arg value="${dir.resources.sbe}/TestSchema.xml" />
+        </java>
 
-		<exec command="${protobuf.home}/bin/protoc">
-			<arg value="-I${dir.resources.protobuf}"/>
-			<arg value="--java_out"/>
-			<arg value="${dir.gen.java}"/>
-			<arg value="${dir.resources.protobuf}/car.proto"/>
-		</exec>
-	</target>
+        <exec command="${protobuf.home}/bin/protoc">
+            <arg value="-I${dir.resources.protobuf}"/>
+            <arg value="--java_out"/>
+            <arg value="${dir.gen.java}"/>
+            <arg value="${dir.resources.protobuf}/car.proto"/>
+        </exec>
+    </target>
 
 </project>
