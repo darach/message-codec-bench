@@ -1,7 +1,8 @@
-/bin
+bin
 .classpath
 .project
-/target
+target
 build-local.properties
 *.iml
 *~
+.idea
