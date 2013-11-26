@@ -40,7 +40,7 @@ public:
 
 static struct Benchmark::Config cfg[] = {
     { Benchmark::ITERATIONS, "1000000" },
-    { Benchmark::BATCHES, "100" }
+    { Benchmark::BATCHES, "20" }
 };
 
 BENCHMARK_CONFIG(SbeCarBench, RunSingleEncode, cfg)
@@ -60,7 +60,7 @@ BENCHMARK_CONFIG(SbeCarBench, RunSingleEncodeAndDecode, cfg)
 
 static struct Benchmark::Config cfgMulti[] = {
     { Benchmark::ITERATIONS, "100000" },
-    { Benchmark::BATCHES, "100" }
+    { Benchmark::BATCHES, "20" }
 };
 
 BENCHMARK_CONFIG(SbeCarBench, RunMultipleEncode, cfgMulti)
