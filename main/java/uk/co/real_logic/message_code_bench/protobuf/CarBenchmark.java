@@ -26,6 +26,7 @@ import uk.co.real_logic.protobuf.examples.Examples.PerformanceFigures;
 public class CarBenchmark
 {
     private static final String VEHICLE_CODE = "abcdef";
+    private static final String ENG_MAN_CODE = "abc";
     private static final String MAKE = "AUDI";
     private static final String MODEL = "R8";
 
@@ -51,7 +52,7 @@ public class CarBenchmark
         car.getEngineBuilder()
            .setCapacity(4200)
            .setNumCylinders(8)
-           .setManufacturerCode("V8");
+           .setManufacturerCode(ENG_MAN_CODE);
 
         car.addFuelFiguresBuilder()
            .setSpeed(30).setMpg(35.9F);

@@ -30,7 +30,7 @@ public class CarBenchmark
 {
     private static final byte[] AUDI = "AUDI".getBytes();
     private static final byte[] R8 = "R8".getBytes();
-    private static final byte[] V8 = "V8".getBytes();
+    private static final byte[] ENG_MAN_CODE = "abc".getBytes();
     private static final byte[] VEHICLE_CODE = "abcdef".getBytes();
 
     @State(Scope.Thread)
@@ -56,7 +56,7 @@ public class CarBenchmark
         car.engine()
            .capacity(4200)
            .numCylinders((short)8)
-           .putManufacturerCode(V8, 0);
+           .putManufacturerCode(ENG_MAN_CODE, 0);
 
         car.fuelFiguresCount(3)
            .next().speed(30).mpg(35.9f)
