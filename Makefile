@@ -28,7 +28,7 @@ CFLAGS=       -Wall
 CXXFLAGS=     -Wall
 LD_LIBS=
 JAVA=         java
-SBE_JAR=      lib/sbe/sbe-0.1-20131125.jar
+SBE_JAR=      lib/sbe/sbe-0.1.jar
 SBE_SCHEMA=   main/resources/sbe/car-c.xml
 SBE_ARGS=     -Dsbe.output.dir="$(BUILD_DIR)" -Dsbe.target.language="Cpp99"
 SBE_INCLUDE_DIR= main/resources
