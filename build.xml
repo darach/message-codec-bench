@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- ====================================================================== 
-     7 Nov 2013 03:28:58                                                        
-
-     message-code-bench    
-     Benchmarks for different codes
-                   
-     barkerm                                                                
-     ====================================================================== -->
-<project name="project" default="compile">
+<project name="message-codec-bench" default="compile">
     <description>
-            description
+    	Benchmarks for different codecs
     </description>
 
     <property name="dir.main.java" location="main/java" />
@@ -73,14 +65,14 @@
 
     <target name="precompile" depends="init">
 
-        <fail unless="protobuf.home" message="Property protobuf.home is not defined (you can add a build-local.properties and define it there." />
-
         <java classname="uk.co.real_logic.sbe.SbeTool">
             <classpath refid="main.classpath" />
             <sysproperty key="sbe.output.dir" value="${dir.gen.java}" />
             <sysproperty key="sbe.target.language" value="Java" />
-            <arg value="${dir.resources.sbe}/TestSchema.xml" />
+            <arg value="${dir.resources.sbe}/car.xml" />
         </java>
+    	
+    	<fail unless="protobuf.home" message="Property protobuf.home is not defined (you can add a build-local.properties and define it there." />
 
         <exec command="${protobuf.home}/bin/protoc">
             <arg value="-I${dir.resources.protobuf}"/>
