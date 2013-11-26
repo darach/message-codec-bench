@@ -72,13 +72,25 @@
             <arg value="${dir.resources.sbe}/car.xml" />
         </java>
     	
-    	<fail unless="protobuf.home" message="Property protobuf.home is not defined (you can add a build-local.properties and define it there." />
+    	<fail unless="protobuf.home" message="protobuf.home is not defined (please add a build-local.properties and define it."/>
 
-        <exec command="${protobuf.home}/bin/protoc">
+        <exec executable="${protobuf.home}/bin/protoc">
             <arg value="-I${dir.resources.protobuf}"/>
             <arg value="--java_out"/>
             <arg value="${dir.gen.java}"/>
             <arg value="${dir.resources.protobuf}/car.proto"/>
+        </exec>
+    </target>
+
+    <target name="perf:test" depends="compile">
+        <exec executable="java">
+            <arg value="-jar"/>
+            <arg value="target/dist/microbenchmarks.jar"/>
+            <arg value="-wi"/>
+            <arg value="3"/>
+            <arg value="-i"/>
+            <arg value="3"/>
+            <arg value=".*CarBenchmark.*"/>
         </exec>
     </target>
 
