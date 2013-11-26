@@ -133,7 +133,7 @@ public:
         tmpChar = car.make();
         tmpChar = car.model();
 
-        return 0;
+        return car.size();
     };
 
 private:

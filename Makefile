@@ -29,7 +29,8 @@ CXXFLAGS=     -Wall -O3
 LD_LIBS=
 JAVA=         java
 SBE_JAR=      lib/sbe/sbe-0.1.jar
-SBE_SCHEMA=   main/resources/sbe/car-c.xml
+SBE_CAR_SCHEMA=   main/resources/sbe/car-c.xml
+SBE_FIX_SCHEMA=   main/resources/sbe/order-and-quote-samples.xml
 SBE_TARGET_DIR=   $(BUILD_DIR)
 SBE_ARGS=     -Dsbe.output.dir="$(SBE_TARGET_DIR)" -Dsbe.target.language="Cpp99"
 SBE_INCLUDE_DIR= main/resources
@@ -45,31 +46,44 @@ endif
 
 vpath %.cpp   $(SRC_DIR)
 vpath %.hpp   $(SRC_DIR)
-SRCS=         CarBench.cpp benchlet-main.cpp
 
-OBJS=         $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
+CAR_SRCS=         CarBench.cpp benchlet-main.cpp
+CAR_OBJS=         $(addprefix $(OBJDIR)/, $(CAR_SRCS:.cpp=.o))
+
+NOS_SRCS=         NosBench.cpp benchlet-main.cpp
+NOS_OBJS=         $(addprefix $(OBJDIR)/, $(NOS_SRCS:.cpp=.o))
 
 CXXFLAGS += -I$(SRC_DIR) -I$(BUILD_DIR) -I$(SBE_INCLUDE_DIR)
 CFLAGS +=   -I..
 LD_LIBS +=  -lstdc++
 
-BENCHLET_RUNNER=    $(BUILD_DIR)/benchlet-runner
+BENCHLET_CAR_RUNNER=    $(BUILD_DIR)/benchlet-car-runner
+BENCHLET_NOS_RUNNER=    $(BUILD_DIR)/benchlet-nos-runner
 
-all:	$(BENCHLET_RUNNER) run-sbe-benchmark
+all:	$(BENCHLET_CAR_RUNNER) $(BENCHLET_NOS_RUNNER)
 
 init:       | $(BUILD_DIR)
 
 $(BUILD_DIR):
 			mkdir -p $(BUILD_DIR)
 
-sbe-codec:  init $(SBE_SCHEMA)
-			$(JAVA) $(SBE_ARGS) -jar $(SBE_JAR) $(SBE_SCHEMA)
+sbe-car-codec:  init $(SBE_CAR_SCHEMA)
+				$(JAVA) $(SBE_ARGS) -jar $(SBE_JAR) $(SBE_CAR_SCHEMA)
 
-$(BENCHLET_RUNNER): init sbe-codec $(OBJS)
-					$(LINK) $(OBJS) -o $(BENCHLET_RUNNER) $(LD_LIBS)
+$(BENCHLET_CAR_RUNNER): init sbe-car-codec $(CAR_OBJS)
+						$(LINK) $(CAR_OBJS) -o $(BENCHLET_CAR_RUNNER) $(LD_LIBS)
 
-run-sbe-benchmark:  $(BENCHLET_RUNNER)
-					$(BENCHLET_RUNNER)
+run-sbe-car-benchmark:  $(BENCHLET_CAR_RUNNER)
+						$(BENCHLET_CAR_RUNNER)
+
+sbe-fix-codec:  init $(SBE_FIX_SCHEMA)
+				$(JAVA) $(SBE_ARGS) -jar $(SBE_JAR) $(SBE_FIX_SCHEMA)
+
+$(BENCHLET_NOS_RUNNER): init sbe-fix-codec $(NOS_OBJS)
+						$(LINK) $(NOS_OBJS) -o $(BENCHLET_NOS_RUNNER) $(LD_LIBS)
+
+run-sbe-nos-benchmark:  $(BENCHLET_NOS_RUNNER)
+						$(BENCHLET_NOS_RUNNER)
 
 $(OBJDIR)/%.o : %.cpp
 				$(CC) -c $(CXXFLAGS) $< -o $@
