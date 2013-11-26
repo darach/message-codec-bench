@@ -45,13 +45,12 @@ public class CarBenchmark
     @GenerateMicroBenchmark
     public Car testMethod(final MyState state)
     {
-        state.car.reset(state.buffer, 0);
+        state.car.resetForEncode(state.buffer, 0);
         
         state.car.code(Model.A)
                  .modelYear(2005)
                  .serialNumber(12345)
-                 .available(BooleanType.TRUE)
-                 .putVehicleCode(VEHICLE_CODE, 0, VEHICLE_CODE.length);
+                 .available(BooleanType.TRUE);
 
         state.car.fuelFiguresCount(3)
             .next().speed(30).mpg(35.9f)
@@ -79,7 +78,6 @@ public class CarBenchmark
         final Engine engine = state.car.engine();
         engine.capacity(8000);
         engine.fuel(5);
-        engine.putManufacturerCode(V8, 0, V8.length);
         engine.numCylinders((short)8);
         
         return state.car;
