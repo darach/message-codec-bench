@@ -17,9 +17,9 @@
 #define _SBE_CAR_CODEC_BENCH_HPP
 
 #include "CodecBench.hpp"
-#include "uk_co_real_logic_sbe_examples/Car.hpp"
+#include "uk_co_real_logic_sbe_examples_car/Car.hpp"
 
-using namespace uk_co_real_logic_sbe_examples;
+using namespace uk_co_real_logic_sbe_examples_car;
 
 char VEHICLE_CODE[] = {'a', 'b', 'c', 'd', 'e', 'f'};
 uint32_t SOMENUMBERS[] = { 1, 2, 3, 4, 5 };

@@ -30,7 +30,8 @@ LD_LIBS=
 JAVA=         java
 SBE_JAR=      lib/sbe/sbe-0.1.jar
 SBE_SCHEMA=   main/resources/sbe/car-c.xml
-SBE_ARGS=     -Dsbe.output.dir="$(BUILD_DIR)" -Dsbe.target.language="Cpp99"
+SBE_TARGET_DIR=   $(BUILD_DIR)
+SBE_ARGS=     -Dsbe.output.dir="$(SBE_TARGET_DIR)" -Dsbe.target.language="Cpp99"
 SBE_INCLUDE_DIR= main/resources
 
 PLAT=         $(shell uname -s)
