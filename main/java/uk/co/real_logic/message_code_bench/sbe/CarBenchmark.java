@@ -64,19 +64,16 @@ public class CarBenchmark
            .next().speed(75).mpg(40.0f);
 
         final Car.PerformanceFigures performanceFigures = car.performanceFiguresCount(2);
-        performanceFigures.next()
-                          .octaneRating((short)95)
-                          .accelerationCount(3)
-                          .next().mph(30).seconds(4.0f)
-                          .next().mph(60).seconds(7.5f)
-                          .next().mph(100).seconds(12.2f);
-        performanceFigures.next()
-                          .octaneRating((short)99)
-                          .accelerationCount(3)
-                          .next().mph(30).seconds(3.8f)
-                          .next().mph(60).seconds(7.1f)
-                          .next().mph(100).seconds(11.8f);
-
+        performanceFigures.next().octaneRating((short)95)
+                                 .accelerationCount(3)
+                                 .next().mph(30).seconds(4.0f)
+                                 .next().mph(60).seconds(7.5f)
+                                 .next().mph(100).seconds(12.2f);
+        performanceFigures.next().octaneRating((short)99)
+                                 .accelerationCount(3)
+                                 .next().mph(30).seconds(3.8f)
+                                 .next().mph(60).seconds(7.1f)
+                                 .next().mph(100).seconds(11.8f);
 
         car.putMake(AUDI, 0, AUDI.length);
         car.putModel(R8, 0, R8.length);
