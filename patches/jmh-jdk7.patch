@@ -1,0 +1,132 @@
+diff -r 24d17973e4b9 jmh-api-samples/pom.xml
+--- a/jmh-api-samples/pom.xml	Sat Oct 26 10:38:32 2013 +0400
++++ b/jmh-api-samples/pom.xml	Thu Nov 28 10:38:43 2013 +1300
+@@ -61,9 +61,9 @@
+                 <artifactId>maven-compiler-plugin</artifactId>
+                 <version>3.0</version>
+                 <configuration>
+-                    <compilerVersion>1.6</compilerVersion>
+-                    <source>1.6</source>
+-                    <target>1.6</target>
++                    <compilerVersion>1.7</compilerVersion>
++                    <source>1.7</source>
++                    <target>1.7</target>
+                 </configuration>
+             </plugin>
+             <plugin>
+diff -r 24d17973e4b9 jmh-core-benchmarks/pom.xml
+--- a/jmh-core-benchmarks/pom.xml	Sat Oct 26 10:38:32 2013 +0400
++++ b/jmh-core-benchmarks/pom.xml	Thu Nov 28 10:38:43 2013 +1300
+@@ -61,9 +61,9 @@
+                 <artifactId>maven-compiler-plugin</artifactId>
+                 <version>3.0</version>
+                 <configuration>
+-                    <compilerVersion>1.6</compilerVersion>
+-                    <source>1.6</source>
+-                    <target>1.6</target>
++                    <compilerVersion>1.7</compilerVersion>
++                    <source>1.7</source>
++                    <target>1.7</target>
+                 </configuration>
+             </plugin>
+             <plugin>
+diff -r 24d17973e4b9 jmh-core-it/pom.xml
+--- a/jmh-core-it/pom.xml	Sat Oct 26 10:38:32 2013 +0400
++++ b/jmh-core-it/pom.xml	Thu Nov 28 10:38:43 2013 +1300
+@@ -67,9 +67,9 @@
+                 <artifactId>maven-compiler-plugin</artifactId>
+                 <version>3.0</version>
+                 <configuration>
+-                    <compilerVersion>1.6</compilerVersion>
+-                    <source>1.6</source>
+-                    <target>1.6</target>
++                    <compilerVersion>1.7</compilerVersion>
++                    <source>1.7</source>
++                    <target>1.7</target>
+                 </configuration>
+             </plugin>
+             <plugin>
+diff -r 24d17973e4b9 jmh-core/pom.xml
+--- a/jmh-core/pom.xml	Sat Oct 26 10:38:32 2013 +0400
++++ b/jmh-core/pom.xml	Thu Nov 28 10:38:43 2013 +1300
+@@ -74,9 +74,9 @@
+                 <artifactId>maven-compiler-plugin</artifactId>
+                 <version>3.0</version>
+                 <configuration>
+-                    <compilerVersion>1.6</compilerVersion>
+-                    <source>1.6</source>
+-                    <target>1.6</target>
++                    <compilerVersion>1.7</compilerVersion>
++                    <source>1.7</source>
++                    <target>1.7</target>
+                     <compilerArgument>-proc:none</compilerArgument>
+                 </configuration>
+             </plugin>
+diff -r 24d17973e4b9 jmh-core/src/main/java/org/openjdk/jmh/processor/internal/CompilerControlProcessor.java
+--- a/jmh-core/src/main/java/org/openjdk/jmh/processor/internal/CompilerControlProcessor.java	Sat Oct 26 10:38:32 2013 +0400
++++ b/jmh-core/src/main/java/org/openjdk/jmh/processor/internal/CompilerControlProcessor.java	Thu Nov 28 10:38:43 2013 +1300
+@@ -43,7 +43,7 @@
+ import java.util.List;
+ import java.util.Set;
+
+-@SupportedSourceVersion(SourceVersion.RELEASE_6)
++@SupportedSourceVersion(SourceVersion.RELEASE_7)
+ public class CompilerControlProcessor extends AbstractProcessor {
+
+     private final List<String> lines = new ArrayList<String>();
+diff -r 24d17973e4b9 jmh-core/src/main/java/org/openjdk/jmh/processor/internal/GenerateMicroBenchmarkProcessor.java
+--- a/jmh-core/src/main/java/org/openjdk/jmh/processor/internal/GenerateMicroBenchmarkProcessor.java	Sat Oct 26 10:38:32 2013 +0400
++++ b/jmh-core/src/main/java/org/openjdk/jmh/processor/internal/GenerateMicroBenchmarkProcessor.java	Thu Nov 28 10:38:43 2013 +1300
+@@ -86,7 +86,7 @@
+  * @author Sergey Kuksenko (sergey.kuksenko@oracle.com)
+  * @author Aleksey Shipilev (aleksey.shipilev@oracle.com)
+  */
+-@SupportedSourceVersion(SourceVersion.RELEASE_6)
++@SupportedSourceVersion(SourceVersion.RELEASE_7)
+ public class GenerateMicroBenchmarkProcessor extends AbstractProcessor {
+
+     private final Set<BenchmarkInfo> benchmarkInfos = new HashSet<BenchmarkInfo>();
+diff -r 24d17973e4b9 jmh-core/src/main/java/org/openjdk/jmh/processor/internal/HelperMethodValidationProcessor.java
+--- a/jmh-core/src/main/java/org/openjdk/jmh/processor/internal/HelperMethodValidationProcessor.java	Sat Oct 26 10:38:32 2013 +0400
++++ b/jmh-core/src/main/java/org/openjdk/jmh/processor/internal/HelperMethodValidationProcessor.java	Thu Nov 28 10:38:43 2013 +1300
+@@ -39,7 +39,7 @@
+ import java.util.HashSet;
+ import java.util.Set;
+
+-@SupportedSourceVersion(SourceVersion.RELEASE_6)
++@SupportedSourceVersion(SourceVersion.RELEASE_7)
+ public class HelperMethodValidationProcessor extends AbstractProcessor {
+
+     @Override
+diff -r 24d17973e4b9 jmh-samples/pom.xml
+--- a/jmh-samples/pom.xml	Sat Oct 26 10:38:32 2013 +0400
++++ b/jmh-samples/pom.xml	Thu Nov 28 10:38:43 2013 +1300
+@@ -61,9 +61,9 @@
+                 <artifactId>maven-compiler-plugin</artifactId>
+                 <version>3.0</version>
+                 <configuration>
+-                    <compilerVersion>1.6</compilerVersion>
+-                    <source>1.6</source>
+-                    <target>1.6</target>
++                    <compilerVersion>1.7</compilerVersion>
++                    <source>1.7</source>
++                    <target>1.7</target>
+                 </configuration>
+             </plugin>
+             <plugin>
+diff -r 24d17973e4b9 jmh-simple-benchmark-archetype/src/main/resources/archetype-resources/pom.xml
+--- a/jmh-simple-benchmark-archetype/src/main/resources/archetype-resources/pom.xml	Sat Oct 26 10:38:32 2013 +0400
++++ b/jmh-simple-benchmark-archetype/src/main/resources/archetype-resources/pom.xml	Thu Nov 28 10:38:43 2013 +1300
+@@ -53,9 +53,9 @@
+                 <artifactId>maven-compiler-plugin</artifactId>
+                 <version>3.0</version>
+                 <configuration>
+-                    <compilerVersion>1.6</compilerVersion>
+-                    <source>1.6</source>
+-                    <target>1.6</target>
++                    <compilerVersion>1.7</compilerVersion>
++                    <source>1.7</source>
++                    <target>1.7</target>
+                 </configuration>
+             </plugin>
+             <plugin>
