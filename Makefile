@@ -30,7 +30,7 @@ LD_LIBS=
 JAVA=         java
 SBE_JAR=      lib/sbe/sbe-0.1.jar
 SBE_CAR_SCHEMA=   main/resources/sbe/car-c.xml
-SBE_FIX_SCHEMA=   main/resources/sbe/order-and-quote-samples.xml
+SBE_FIX_SCHEMA=   main/resources/sbe/fix-message-samples.xml
 SBE_TARGET_DIR=   $(BUILD_DIR)
 SBE_ARGS=     -Dsbe.output.dir="$(SBE_TARGET_DIR)" -Dsbe.target.language="Cpp99"
 SBE_INCLUDE_DIR= main/resources
