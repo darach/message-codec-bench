@@ -24,12 +24,12 @@ import java.nio.ByteBuffer;
 
 public class ProcessStreamOfUpdates
 {
-    public final static class Q implements StreamQuery
+    public static class Query implements StreamQuery
     {
         public int sum;
         public int count;
 
-       public void car(int engineCapacity, int year)
+       public void car(final int engineCapacity, final int year)
         {
             if (engineCapacity > 1600)
             {
@@ -44,14 +44,14 @@ public class ProcessStreamOfUpdates
     @State(Scope.Thread)
     public static class Data
     {
-        ByteBuffer buffy = processor.setupBenchmarkData(ByteBuffer.allocateDirect(32 * 1024 * 1024));
-        Q query = new Q();
+        final ByteBuffer buffy = processor.setupBenchmarkData(ByteBuffer.allocateDirect(32 * 1024 * 1024));
+        final Query query = new Query();
     }
 
     @GenerateMicroBenchmark
-    public int avgYearWhereEngineIsBig(Data data)
+    public int avgYearWhereEngineIsBig(final Data data)
     {
-        // reset Q
+        // reset Query
         data.query.sum = 0;
         data.query.count = 0;
         // process all the cars

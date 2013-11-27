@@ -41,21 +41,25 @@ public class SbeStreamProcessor implements StreamProcessor
         int size = encode(CAR, directBuffer, 4);
         directBuffer.putInt(0, size, ByteOrder.nativeOrder());
         int offset = size + 4;
+
         while (offset < directBuffer.capacity() - (size + 4))
         {
             size = encode(CAR, directBuffer, offset + 4);
             directBuffer.putInt(offset, size, ByteOrder.nativeOrder());
             offset += size + 4;
         }
+
         underlyingBuffer.limit(offset);
+
         return underlyingBuffer;
     }
 
-    public void process(ByteBuffer underlyingBuffer, StreamQuery query)
+    public void process(final ByteBuffer underlyingBuffer, final StreamQuery query)
     {
         DirectBuffer directBuffer = new DirectBuffer(underlyingBuffer);
         int size = 0;
         int offset = 0;
+
         do
         {
             size = directBuffer.getInt(offset, ByteOrder.nativeOrder());
@@ -97,17 +101,15 @@ public class SbeStreamProcessor implements StreamProcessor
            .next().speed(75).mpg(40.0f);
 
         final Car.PerformanceFigures performanceFigures = car.performanceFiguresCount(2);
-        performanceFigures.next()
-                          .octaneRating((short)95)
-                          .accelerationCount(3)
-                          .next().mph(30).seconds(4.0f)
-                          .next().mph(60).seconds(7.5f).next().mph(100).seconds(12.2f);
-        performanceFigures.next()
-                          .octaneRating((short)99)
-                          .accelerationCount(3)
-                          .next().mph(30).seconds(3.8f)
-                          .next().mph(60).seconds(7.1f)
-                          .next().mph(100).seconds(11.8f);
+        performanceFigures.next().octaneRating((short)95)
+                                 .accelerationCount(3)
+                                 .next().mph(30).seconds(4.0f)
+                                 .next().mph(60).seconds(7.5f).next().mph(100).seconds(12.2f);
+        performanceFigures.next().octaneRating((short)99)
+                                 .accelerationCount(3)
+                                 .next().mph(30).seconds(3.8f)
+                                 .next().mph(60).seconds(7.1f)
+                                 .next().mph(100).seconds(11.8f);
 
         car.putMake(MAKE, srcOffset, MAKE.length);
         car.putModel(MODEL, srcOffset, MODEL.length);
@@ -115,8 +117,12 @@ public class SbeStreamProcessor implements StreamProcessor
         return car.size();
     }
 
-    private static void processNextCar(final Car car, final DirectBuffer directBuffer, final int bufferOffset,
-                                       final int actingBlockLength, final int actingVersion, StreamQuery query)
+    private static void processNextCar(final Car car,
+                                       final DirectBuffer directBuffer,
+                                       final int bufferOffset,
+                                       final int actingBlockLength,
+                                       final int actingVersion,
+                                       StreamQuery query)
     {
         car.resetForDecode(directBuffer, bufferOffset, actingBlockLength, actingVersion);
         final int modelYear = car.modelYear();
@@ -127,14 +133,13 @@ public class SbeStreamProcessor implements StreamProcessor
 
     /**
      * For sanity testing
-     *
-     * @param args
      */
     public static void main(String[] args)
     {
-        SbeStreamProcessor ssp = new SbeStreamProcessor();
-        ByteBuffer preparedBuffer = ssp.setupBenchmarkData(ByteBuffer.allocateDirect(32 * 1024 * 1024));
-        ProcessStreamOfUpdates.Q query = new ProcessStreamOfUpdates.Q();
+        final SbeStreamProcessor ssp = new SbeStreamProcessor();
+        final ByteBuffer preparedBuffer = ssp.setupBenchmarkData(ByteBuffer.allocateDirect(32 * 1024 * 1024));
+        final ProcessStreamOfUpdates.Query query = new ProcessStreamOfUpdates.Query();
+
         ssp.process(preparedBuffer, query);
         System.out.println(query.sum / query.count);
     }
