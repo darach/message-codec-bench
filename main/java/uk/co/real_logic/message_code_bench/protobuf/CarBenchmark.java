@@ -30,36 +30,31 @@ public class CarBenchmark
     private static final String MAKE = "AUDI";
     private static final String MODEL = "R8";
 
-    @State(Scope.Thread)
+    @State(Scope.Benchmark)
     public static class MyState
     {
         final Examples.Car.Builder car = Examples.Car.newBuilder();
     }
 
     @GenerateMicroBenchmark
-    public byte[] testMethod(final MyState state)
+    public byte[] testEncode(final MyState state)
     {
         final Examples.Car.Builder car = state.car;
 
-        car.clear();
-
-        car.setCode(Model.A)
+        car.clear()
+           .setCode(Model.A)
            .setModelYear(2005)
            .setSerialNumber(12345)
            .setAvailable(true)
            .setVehicleCode(VEHICLE_CODE);
 
-        car.getEngineBuilder()
-           .setCapacity(4200)
-           .setNumCylinders(8)
-           .setManufacturerCode(ENG_MAN_CODE);
+        car.getEngineBuilder().setCapacity(4200)
+                              .setNumCylinders(8)
+                              .setManufacturerCode(ENG_MAN_CODE);
 
-        car.addFuelFiguresBuilder()
-           .setSpeed(30).setMpg(35.9F);
-        car.addFuelFiguresBuilder()
-           .setSpeed(30).setMpg(49.0F);
-        car.addFuelFiguresBuilder()
-           .setSpeed(30).setMpg(40.0F);
+        car.addFuelFiguresBuilder().setSpeed(30).setMpg(35.9F);
+        car.addFuelFiguresBuilder().setSpeed(30).setMpg(49.0F);
+        car.addFuelFiguresBuilder().setSpeed(30).setMpg(40.0F);
 
         final PerformanceFigures.Builder perf1 = car.addPerformanceBuilder().setOctaneRating(95);
         perf1.addAccelerationBuilder().setMph(30).setSeconds(4.0f);
