@@ -16,6 +16,7 @@
 
 package uk.co.real_logic.message_code_bench.protobuf;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import org.openjdk.jmh.annotations.GenerateMicroBenchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
@@ -34,13 +35,32 @@ public class CarBenchmark
     public static class MyState
     {
         final Examples.Car.Builder car = Examples.Car.newBuilder();
+        final byte[] decodeBuffer;
+
+        {
+            decodeBuffer = encode(car);
+        }
     }
 
     @GenerateMicroBenchmark
-    public byte[] testEncode(final MyState state)
+    public Object testEncode(final MyState state)
     {
         final Examples.Car.Builder car = state.car;
 
+        return encode(car);
+    }
+
+    @GenerateMicroBenchmark
+    public Object testDecode(final MyState state) throws InvalidProtocolBufferException
+    {
+        final Examples.Car.Builder car = state.car;
+        final byte[] buffer = state.decodeBuffer;
+
+        return decode(car, buffer);
+    }
+
+    private static byte[] encode(final Examples.Car.Builder car)
+    {
         car.clear()
            .setCode(Model.A)
            .setModelYear(2005)
@@ -48,9 +68,19 @@ public class CarBenchmark
            .setAvailable(true)
            .setVehicleCode(VEHICLE_CODE);
 
+        for (int i = 0, size = 5; i < size; i++)
+        {
+            car.addSomeNumbers(i);
+        }
+
+        car.addOptionalExtras(Examples.Car.Extras.SPORTS_PACK)
+           .addOptionalExtras(Examples.Car.Extras.SUN_ROOF);
+
         car.getEngineBuilder().setCapacity(4200)
                               .setNumCylinders(8)
-                              .setManufacturerCode(ENG_MAN_CODE);
+                              .setManufacturerCode(ENG_MAN_CODE)
+                              .setFuel("Petrol")
+                              .setMaxRpm(9000);
 
         car.addFuelFiguresBuilder().setSpeed(30).setMpg(35.9F);
         car.addFuelFiguresBuilder().setSpeed(30).setMpg(49.0F);
@@ -70,5 +100,57 @@ public class CarBenchmark
         car.setModel(MODEL);
 
         return car.build().toByteArray();
+    }
+
+    private static Object decode(final Examples.Car.Builder car,
+                                 final byte[] buffer) throws InvalidProtocolBufferException
+    {
+        car.clear();
+        car.mergeFrom(buffer);
+
+        car.getSerialNumber();
+        car.getModelYear();
+        car.hasAvailable();
+        car.getCode();
+
+        for (int i = 0, size = car.getSomeNumbersCount(); i < size; i++)
+        {
+            car.getSomeNumbers(i);
+        }
+
+        car.getVehicleCode();
+
+        for (int i = 0, size = car.getOptionalExtrasCount(); i < size; i++)
+        {
+            car.getOptionalExtras(i);
+        }
+
+        final Examples.Engine engine = car.getEngine();
+        engine.getCapacity();
+        engine.getNumCylinders();
+        engine.getMaxRpm();
+        engine.getManufacturerCode();
+        engine.getFuel();
+
+        for (final Examples.FuelFigures fuelFigures : car.getFuelFiguresList())
+        {
+            fuelFigures.getSpeed();
+            fuelFigures.getMpg();
+        }
+
+        for (final PerformanceFigures performanceFigures : car.getPerformanceList())
+        {
+            performanceFigures.getOctaneRating();
+
+            for (final Examples.Acceleration acceleration : performanceFigures.getAccelerationList())
+            {
+                acceleration.getMph();
+                acceleration.getSeconds();
+            }
+        }
+
+        car.getMake();
+
+        return car.getModel();
     }
 }

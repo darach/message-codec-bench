@@ -98,9 +98,9 @@ public class CarBenchmark
                               final int bufferIndex)
     {
         messageHeader.reset(buffer, bufferIndex, 0)
-             .templateId(car.templateId())
-             .version((short)car.templateVersion())
-             .blockLength(car.blockLength());
+                     .templateId(car.templateId())
+                     .version((short)car.templateVersion())
+                     .blockLength(car.blockLength());
 
         car.resetForEncode(buffer, bufferIndex + messageHeader.size())
            .code(Model.A)
@@ -108,6 +108,14 @@ public class CarBenchmark
            .serialNumber(12345)
            .available(BooleanType.TRUE)
            .putVehicleCode(VEHICLE_CODE, 0);
+
+        for (int i = 0, size = car.someNumbersLength(); i < size; i++)
+        {
+            car.someNumbers(i, i);
+        }
+
+        car.extras().sportsPack(true)
+                    .sunRoof(true);
 
         car.engine().capacity(4200)
                     .numCylinders((short)8)
@@ -140,13 +148,11 @@ public class CarBenchmark
     {
         messageHeader.reset(buffer, bufferIndex, 0);
 
-        final int templateId = messageHeader.templateId();
         final int actingVersion = messageHeader.version();
         final int actingBlockLength = messageHeader.blockLength();
 
         car.resetForDecode(buffer, bufferIndex + messageHeader.size(), actingBlockLength, actingVersion);
 
-        car.templateId();
         car.serialNumber();
         car.modelYear();
         car.available();
