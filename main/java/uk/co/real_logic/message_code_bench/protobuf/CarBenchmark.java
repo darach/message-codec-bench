@@ -16,13 +16,15 @@
 
 package uk.co.real_logic.message_code_bench.protobuf;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import org.openjdk.jmh.annotations.GenerateMicroBenchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import uk.co.real_logic.protobuf.examples.Examples;
 import uk.co.real_logic.protobuf.examples.Examples.Car.Model;
 import uk.co.real_logic.protobuf.examples.Examples.PerformanceFigures;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 public class CarBenchmark
 {
@@ -37,30 +39,46 @@ public class CarBenchmark
         final Examples.Car.Builder car = Examples.Car.newBuilder();
         final byte[] decodeBuffer;
 
+        final ByteArrayInputStream in;
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
         {
-            decodeBuffer = encode(car);
+            try
+            {
+                encode(car, out);
+            }
+            catch (final Exception ex)
+            {
+                throw new RuntimeException(ex);
+            }
+
+            decodeBuffer = out.toByteArray();
+            in = new ByteArrayInputStream(decodeBuffer);
         }
     }
 
     @GenerateMicroBenchmark
-    public Object testEncode(final MyState state)
+    public int testEncode(final MyState state) throws Exception
     {
         final Examples.Car.Builder car = state.car;
+        final ByteArrayOutputStream out = state.out;
 
-        return encode(car);
+        return encode(car,  out);
     }
 
     @GenerateMicroBenchmark
-    public Object testDecode(final MyState state) throws InvalidProtocolBufferException
+    public int testDecode(final MyState state) throws Exception
     {
         final Examples.Car.Builder car = state.car;
-        final byte[] buffer = state.decodeBuffer;
+        final ByteArrayInputStream in = state.in;
 
-        return decode(car, buffer);
+        return decode(car, in);
     }
 
-    private static byte[] encode(final Examples.Car.Builder car)
+    private static int encode(final Examples.Car.Builder car, final ByteArrayOutputStream out) throws Exception
     {
+        out.reset();
+
         car.clear()
            .setCode(Model.A)
            .setModelYear(2005)
@@ -99,14 +117,18 @@ public class CarBenchmark
         car.setMake(MAKE);
         car.setModel(MODEL);
 
-        return car.build().toByteArray();
+        car.build().writeTo(out);
+
+        return out.size();
     }
 
-    private static Object decode(final Examples.Car.Builder car,
-                                 final byte[] buffer) throws InvalidProtocolBufferException
+    private static int decode(final Examples.Car.Builder car,
+                              final ByteArrayInputStream in) throws Exception
     {
+        in.mark(in.available());
+
         car.clear();
-        car.mergeFrom(buffer);
+        car.mergeFrom(in);
 
         car.getSerialNumber();
         car.getModelYear();
@@ -150,8 +172,11 @@ public class CarBenchmark
         }
 
         car.getMake();
+        car.getModel();
 
-        return car.getModel();
+        in.reset();
+
+        return in.available();
     }
 
     /*
@@ -162,14 +187,12 @@ public class CarBenchmark
     {
         for (int i = 0; i < 10; i++)
         {
-            System.gc();
             perfTestEncode(i);
-            System.gc();
             perfTestDecode(i);
         }
     }
 
-    private static void perfTestEncode(final int runNumber)
+    private static void perfTestEncode(final int runNumber) throws Exception
     {
         final int reps = 1 * 1000 * 1000;
         final MyState state = new MyState();
@@ -183,9 +206,10 @@ public class CarBenchmark
 
         final long totalDuration = System.nanoTime() - start;
 
-        System.out.printf("%d - %d(ns) average duration for encode - message field %d\n",
+        System.out.printf("%d - %d(ns) average duration for %s.testEncode() - message size %d\n",
                           Integer.valueOf(runNumber),
                           Long.valueOf(totalDuration / reps),
+                          CarBenchmark.class.getName(),
                           Integer.valueOf(state.car.getSomeNumbersCount()));
     }
 
@@ -203,9 +227,10 @@ public class CarBenchmark
 
         final long totalDuration = System.nanoTime() - start;
 
-        System.out.printf("%d - %d(ns) average duration for decode - message field %d\n",
+        System.out.printf("%d - %d(ns) average duration for %s.testDecode() - message size %d\n",
                           Integer.valueOf(runNumber),
                           Long.valueOf(totalDuration / reps),
+                          CarBenchmark.class.getName(),
                           Integer.valueOf(state.car.getSomeNumbersCount()));
     }
 }

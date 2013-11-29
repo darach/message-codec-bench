@@ -211,9 +211,7 @@ public class CarBenchmark
     {
         for (int i = 0; i < 10; i++)
         {
-            System.gc();
             perfTestEncode(i);
-            System.gc();
             perfTestDecode(i);
         }
     }
@@ -232,9 +230,10 @@ public class CarBenchmark
 
         final long totalDuration = System.nanoTime() - start;
 
-        System.out.printf("%d - %d(ns) average duration for encode - message size %d\n",
+        System.out.printf("%d - %d(ns) average duration for %s.testEncode() - message size %d\n",
                           Integer.valueOf(runNumber),
                           Long.valueOf(totalDuration / reps),
+                          CarBenchmark.class.getName(),
                           Integer.valueOf(state.car.size()));
     }
 
@@ -252,9 +251,10 @@ public class CarBenchmark
 
         final long totalDuration = System.nanoTime() - start;
 
-        System.out.printf("%d - %d(ns) average duration for decode - message size %d\n",
+        System.out.printf("%d - %d(ns) average duration for %s.testDecode() - message size %d\n",
                           Integer.valueOf(runNumber),
                           Long.valueOf(totalDuration / reps),
+                          CarBenchmark.class.getName(),
                           Integer.valueOf(state.car.size()));
     }
 }
