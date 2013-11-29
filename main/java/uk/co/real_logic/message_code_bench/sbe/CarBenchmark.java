@@ -204,4 +204,59 @@ public class CarBenchmark
         car.getMake(tempBuffer, 0, tempBuffer.length);
         car.getModel(tempBuffer, 0, tempBuffer.length);
     }
+
+    /*
+     * Benchmarks to allow execution outside of JMH.
+     */
+
+    public static void main(final String[] args)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            System.gc();
+            perfTestEncode(i);
+            System.gc();
+            perfTestDecode(i);
+        }
+    }
+
+    private static void perfTestEncode(final int runNumber)
+    {
+        final int reps = 10 * 1000 * 1000;
+        final MyState state = new MyState();
+        final CarBenchmark benchmark = new CarBenchmark();
+
+        final long start = System.nanoTime();
+        for (int i = 0; i < reps; i++)
+        {
+            benchmark.testEncode(state);
+        }
+
+        final long totalDuration = System.nanoTime() - start;
+
+        System.out.printf("%d - %d(ns) average duration for encode - message size %d\n",
+                          Integer.valueOf(runNumber),
+                          Long.valueOf(totalDuration / reps),
+                          Integer.valueOf(state.car.size()));
+    }
+
+    private static void perfTestDecode(final int runNumber)
+    {
+        final int reps = 10 * 1000 * 1000;
+        final MyState state = new MyState();
+        final CarBenchmark benchmark = new CarBenchmark();
+
+        final long start = System.nanoTime();
+        for (int i = 0; i < reps; i++)
+        {
+            benchmark.testDecode(state);
+        }
+
+        final long totalDuration = System.nanoTime() - start;
+
+        System.out.printf("%d - %d(ns) average duration for decode - message size %d\n",
+                          Integer.valueOf(runNumber),
+                          Long.valueOf(totalDuration / reps),
+                          Integer.valueOf(state.car.size()));
+    }
 }
