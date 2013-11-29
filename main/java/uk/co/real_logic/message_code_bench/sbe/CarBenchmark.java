@@ -36,12 +36,10 @@ public class CarBenchmark
     {
         try
         {
-            final Car car = new Car();
-
-            MAKE = "MAKE".getBytes(car.makeCharacterEncoding());
-            MODEL = "MODEL".getBytes(car.modelCharacterEncoding());
-            ENG_MAN_CODE = "abc".getBytes(car.engine().manufacturerCodeCharacterEncoding());
-            VEHICLE_CODE = "abcdef".getBytes(car.vehicleCodeCharacterEncoding());
+            MAKE = "MAKE".getBytes(Car.makeCharacterEncoding());
+            MODEL = "MODEL".getBytes(Car.modelCharacterEncoding());
+            ENG_MAN_CODE = "abc".getBytes(Engine.manufacturerCodeCharacterEncoding());
+            VEHICLE_CODE = "abcdef".getBytes(Car.vehicleCodeCharacterEncoding());
         }
         catch (final UnsupportedEncodingException ex)
         {
@@ -109,7 +107,7 @@ public class CarBenchmark
            .available(BooleanType.TRUE)
            .putVehicleCode(VEHICLE_CODE, 0);
 
-        for (int i = 0, size = car.someNumbersLength(); i < size; i++)
+        for (int i = 0, size = Car.someNumbersLength(); i < size; i++)
         {
             car.someNumbers(i, i);
         }
@@ -158,12 +156,12 @@ public class CarBenchmark
         car.available();
         car.code();
 
-        for (int i = 0, size = car.someNumbersLength(); i < size; i++)
+        for (int i = 0, size = Car.someNumbersLength(); i < size; i++)
         {
             car.someNumbers(i);
         }
 
-        for (int i = 0, size = car.vehicleCodeLength(); i < size; i++)
+        for (int i = 0, size = Car.vehicleCodeLength(); i < size; i++)
         {
             car.vehicleCode(i);
         }
@@ -177,7 +175,7 @@ public class CarBenchmark
         engine.capacity();
         engine.numCylinders();
         engine.maxRpm();
-        for (int i = 0, size = engine.manufacturerCodeLength(); i < size; i++)
+        for (int i = 0, size = Engine.manufacturerCodeLength(); i < size; i++)
         {
             engine.manufacturerCode(i);
         }
