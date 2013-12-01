@@ -33,9 +33,9 @@
             <type name="mantissa" primitiveType="int32"/>
             <type name="exponent" primitiveType="int8" presence="constant">0</type>
         </composite>
-        <composite name="decimal64">
+        <composite name="Decimal64">
             <type name="mantissa" primitiveType="int64"/>
-            <type name="exponent" primitiveType="int8" presence="constant">5</type>
+            <type name="exponent" primitiveType="int8" presence="constant">7</type>
         </composite>
         <composite name="OptionalPrice">
             <type name="mantissa" primitiveType="int64"/>
@@ -254,12 +254,12 @@
             <field name="SecurityId" id="48" type="uint64" semanticType="InstrumentID"/>
             <field name="RptSeq" id="83" type="uint8" semanticType="SequenceNumber"/>
             <field name="QuoteCondition" id="276" type="QuoteCondition"/>
-            <field name="MdEntryPx" id="270" type="decimal64" semanticType="Price"/>
+            <field name="MdEntryPx" id="270" type="Decimal64" semanticType="Price"/>
             <field name="NumberOfOrders" id="346" type="uint32" semanticType="NumberOfOrders"/>
             <field name="MdEntryTime" id="273" type="timestamp"/>
             <field name="MdEntrySize" id="271" type="IntQty32"/>
             <field name="TradingSessionId" id="336" type="MarketStateIdentifier"/>
-            <field name="NetChgPrevDay" id="451" type="decimal64"/>
+            <field name="NetChgPrevDay" id="451" type="Decimal64"/>
             <field name="TickDirection" id="274" type="TickDirection"/>
             <field name="OpenCloseSettleFlag" id="286" type="OpenCloseSettleFlag"/>
             <field name="SettlDate" id="64" type="timestamp"/>
@@ -282,7 +282,7 @@
             <field name="MdEntryType" id="269" type="MDEntryType" constant="2"/>
             <field name="SecurityId" id="48" type="uint64"/>
             <field name="RptSeq" id="83" type="uint8"/>
-            <field name="MdEntryPx" id="270" type="decimal64"/>
+            <field name="MdEntryPx" id="270" type="Decimal64"/>
             <field name="MdEntrySize" id="271" type="IntQty32"/>
             <field name="NumberOfOrders" id="346" type="uint16"/>
             <field name="TradeId" id="1003" type="uint64"/>
