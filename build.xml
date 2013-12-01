@@ -95,7 +95,7 @@
             <arg value="3"/>
             <arg value="-i"/>
             <arg value="3"/>
-            <arg value=".*CarBenchmark.*"/>
+            <arg value=".*MarketDataBenchmark.*"/>
         </exec>
     </target>
 

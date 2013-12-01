@@ -209,7 +209,7 @@ public class CarBenchmark
         System.out.printf("%d - %d(ns) average duration for %s.testEncode() - message size %d\n",
                           Integer.valueOf(runNumber),
                           Long.valueOf(totalDuration / reps),
-                          CarBenchmark.class.getName(),
+                          benchmark.getClass().getName(),
                           Integer.valueOf(state.car.getSomeNumbersCount()));
     }
 
@@ -230,7 +230,7 @@ public class CarBenchmark
         System.out.printf("%d - %d(ns) average duration for %s.testDecode() - message size %d\n",
                           Integer.valueOf(runNumber),
                           Long.valueOf(totalDuration / reps),
-                          CarBenchmark.class.getName(),
+                          benchmark.getClass().getName(),
                           Integer.valueOf(state.car.getSomeNumbersCount()));
     }
 }
