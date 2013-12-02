@@ -190,5 +190,4 @@ public class MarketDataBenchmark
                           benchmark.getClass().getName(),
                           Integer.valueOf(state.marketData.size()));
     }
-
 }

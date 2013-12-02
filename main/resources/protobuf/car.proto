@@ -3,7 +3,8 @@ package uk.co.real_logic.protobuf.examples;
 option java_package = "uk.co.real_logic.protobuf.examples";
 option java_outer_classname = "Examples";
 
-message Engine {
+message Engine
+{
     required uint32 capacity         = 1;
     required uint32 numCylinders     = 2;
     optional uint32 maxRpm           = 3 [default = 9000];
@@ -11,45 +12,50 @@ message Engine {
     optional string fuel             = 5 [default = "Petrol"];
 }
 
-message FuelFigures {
+message FuelFigures
+{
     required uint32 speed = 1;
     required float  mpg   = 2;
 }
 
-message Acceleration {
+message Acceleration
+{
     required uint32 mph     = 1;
     required float  seconds = 2;
 }
 
-message PerformanceFigures {
+message PerformanceFigures
+{
     required uint32       octaneRating = 1;
     repeated Acceleration acceleration = 2;
 }
 
-message Car {
-    required uint32 serialNumber   = 1;
-    required uint32 modelYear      = 2;
-    required bool   available      = 3;
-    enum Model {
+message Car
+{
+    enum Model
+    {
         A = 0;
         B = 1;
         C = 2;
     }
-    required Model  code           = 4;
-    repeated int32  someNumbers    = 5;
-    required string vehicleCode    = 6;
 
-    enum Extras {
+    enum Extras
+    {
         SUN_ROOF = 1;
         SPORTS_PACK = 2;
         CRUISE_CONTROL = 3;
     }
+
+    required uint32 serialNumber   = 1;
+    required uint32 modelYear      = 2;
+    required bool   available      = 3;
+    required Model  code           = 4;
+    repeated int32  someNumbers    = 5;
+    required string vehicleCode    = 6;
     repeated Extras optionalExtras   = 7;
     required Engine engine           = 8;
     repeated FuelFigures fuelFigures = 9;
-
     repeated PerformanceFigures performance = 10;
-
     required string make  = 11;
     required string model = 12;
- }
+}

@@ -96,9 +96,7 @@ public class CarBenchmark
 
         car.getEngineBuilder().setCapacity(4200)
                               .setNumCylinders(8)
-                              .setManufacturerCode(ENG_MAN_CODE)
-                              .setFuel("Petrol")
-                              .setMaxRpm(9000);
+                              .setManufacturerCode(ENG_MAN_CODE);
 
         car.addFuelFiguresBuilder().setSpeed(30).setMpg(35.9F);
         car.addFuelFiguresBuilder().setSpeed(30).setMpg(49.0F);

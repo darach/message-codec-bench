@@ -84,6 +84,7 @@
             <arg value="--java_out"/>
             <arg value="${dir.gen.java}"/>
             <arg value="${dir.resources.protobuf}/car.proto"/>
+            <arg value="${dir.resources.protobuf}/fix-messages.proto"/>
         </exec>
     </target>
 
