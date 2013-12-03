@@ -95,12 +95,12 @@ public class CarBenchmark
                               final DirectBuffer buffer,
                               final int bufferIndex)
     {
-        messageHeader.reset(buffer, bufferIndex, 0)
+        messageHeader.wrap(buffer, bufferIndex, 0)
                      .templateId(car.templateId())
-                     .version((short)car.templateVersion())
+                     .version(car.templateVersion())
                      .blockLength(car.blockLength());
 
-        car.resetForEncode(buffer, bufferIndex + messageHeader.size())
+        car.wrapForEncode(buffer, bufferIndex + messageHeader.size())
            .code(Model.A)
            .modelYear(2005)
            .serialNumber(12345)
@@ -144,12 +144,12 @@ public class CarBenchmark
                                final int bufferIndex,
                                final byte[] tempBuffer)
     {
-        messageHeader.reset(buffer, bufferIndex, 0);
+        messageHeader.wrap(buffer, bufferIndex, 0);
 
         final int actingVersion = messageHeader.version();
         final int actingBlockLength = messageHeader.blockLength();
 
-        car.resetForDecode(buffer, bufferIndex + messageHeader.size(), actingBlockLength, actingVersion);
+        car.wrapForDecode(buffer, bufferIndex + messageHeader.size(), actingBlockLength, actingVersion);
 
         car.serialNumber();
         car.modelYear();

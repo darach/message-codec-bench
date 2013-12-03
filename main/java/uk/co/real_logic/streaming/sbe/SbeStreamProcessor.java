@@ -26,8 +26,8 @@ public class SbeStreamProcessor implements StreamProcessor
     {
         try
         {
-            MAKE = "Honda".getBytes(CAR.makeCharacterEncoding());
-            MODEL = "Civic VTi".getBytes(CAR.modelCharacterEncoding());
+            MAKE = "Honda".getBytes(Car.makeCharacterEncoding());
+            MODEL = "Civic VTi".getBytes(Car.modelCharacterEncoding());
         }
         catch (final UnsupportedEncodingException ex)
         {
@@ -73,14 +73,14 @@ public class SbeStreamProcessor implements StreamProcessor
     {
         final int srcOffset = 0;
 
-        car.resetForEncode(directBuffer, bufferOffset)
+        car.wrapForEncode(directBuffer, bufferOffset)
            .serialNumber(1234)
            .modelYear(2666)
            .available(BooleanType.TRUE)
            .code(Model.A)
            .putVehicleCode(VEHICLE_CODE, srcOffset);
 
-        for (int i = 0, size = car.someNumbersLength(); i < size; i++)
+        for (int i = 0, size = Car.someNumbersLength(); i < size; i++)
         {
             car.someNumbers(i, i);
         }
@@ -120,7 +120,7 @@ public class SbeStreamProcessor implements StreamProcessor
                                        final int actingVersion,
                                        final StreamQuery query)
     {
-        car.resetForDecode(directBuffer, bufferOffset, actingBlockLength, actingVersion);
+        car.wrapForDecode(directBuffer, bufferOffset, actingBlockLength, actingVersion);
         final int modelYear = car.modelYear();
         final Engine engine = car.engine();
         final int engineCapacity = engine.capacity();

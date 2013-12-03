@@ -70,15 +70,15 @@ public class MarketDataBenchmark
                               final DirectBuffer buffer,
                               final int bufferIndex)
     {
-        messageHeader.reset(buffer, bufferIndex, 0)
+        messageHeader.wrap(buffer, bufferIndex, 0)
                      .templateId(marketData.templateId())
-                     .version((short)marketData.templateVersion())
+                     .version(marketData.templateVersion())
                      .blockLength(marketData.blockLength());
 
-        marketData.resetForEncode(buffer, bufferIndex + messageHeader.size())
-                   .transactTime(1234L)
-                   .eventTimeDelta(987)
-                   .matchEventIndicator(MatchEventIndicator.END_EVENT);
+        marketData.wrapForEncode(buffer, bufferIndex + messageHeader.size())
+                  .transactTime(1234L)
+                  .eventTimeDelta(987)
+                  .matchEventIndicator(MatchEventIndicator.END_EVENT);
 
         final MarketDataIncrementalRefreshTrades.MdIncGrp mdIncGrp = marketData.mdIncGrpCount(2);
 
@@ -111,12 +111,12 @@ public class MarketDataBenchmark
                                final DirectBuffer buffer,
                                final int bufferIndex)
     {
-        messageHeader.reset(buffer, bufferIndex, 0);
+        messageHeader.wrap(buffer, bufferIndex, 0);
 
         final int actingVersion = messageHeader.version();
         final int actingBlockLength = messageHeader.blockLength();
 
-        marketData.resetForDecode(buffer, bufferIndex + messageHeader.size(), actingBlockLength, actingVersion);
+        marketData.wrapForDecode(buffer, bufferIndex + messageHeader.size(), actingBlockLength, actingVersion);
 
         marketData.transactTime();
         marketData.eventTimeDelta();
