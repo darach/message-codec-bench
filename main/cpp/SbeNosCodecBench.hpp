@@ -50,40 +50,40 @@ public:
         nos_.wrapForEncode(buffer, 0)
             .putAccount(ACCOUNT)
             .putClOrdID(CLORDID)
-            .HandInst(HandInst::AUTOMATED_EXECUTION)
-            .CustOrderHandlingInst(CustOrderHandlingInst::ALGO_ENGINE);
+            .handInst(HandInst::AUTOMATED_EXECUTION)
+            .custOrderHandlingInst(CustOrderHandlingInst::ALGO_ENGINE);
 
-        nos_.OrderQty().mantissa(10);
+        nos_.orderQty().mantissa(10);
 
-        nos_.OrdType(OrdType::MARKET_ORDER);
+        nos_.ordType(OrdType::MARKET_ORDER);
 
-        nos_.Price()
+        nos_.price()
             .mantissa(3509)
             .exponent(-2);
 
-        nos_.Side(Side::BUY)
+        nos_.side(Side::BUY)
             .putSymbol(SYMBOL)
-            .TimeInForce(TimeInForce::GOOD_TILL_CANCEL)
-            .TransactTime(0xFFFFFFFFFEFE)
-            .ManualOrderIndicator(BooleanType::FIX_FALSE)
+            .timeInForce(TimeInForce::GOOD_TILL_CANCEL)
+            .transactTime(0xFFFFFFFFFEFE)
+            .manualOrderIndicator(BooleanType::FIX_FALSE)
             .putAllocAccount(ALLOCACCOUNT);
 
-        nos_.StopPx()
+        nos_.stopPx()
             .mantissa(3510)
             .exponent(-2);
 
         nos_.putSecurityDesc(SECURITYDESC);
 
-        nos_.MinQty().mantissa(9);
+        nos_.minQty().mantissa(9);
 
         nos_.putSecurityType(SECURITYTYPE)
-            .CustomerOrFirm(CustomerOrFirm::CUSTOMER);
+            .customerOrFirm(CustomerOrFirm::CUSTOMER);
 
-        nos_.MaxShow().mantissa(5);
+        nos_.maxShow().mantissa(5);
 
-        nos_.ExpireDate(1210)
+        nos_.expireDate(1210)
             .putSelfMatchPreventionID(SELFMATCHPREVENTIONID)
-            .CtiCode(CtiCode::OWN)
+            .ctiCode(CtiCode::OWN)
             .putGiveUpFirm(GIVEUPFIRM)
             .putCmtaGiveupCD(CMTAGIVEUPCD)
             .putCorrelationClOrdID(CORRELATIONCLORDID);
@@ -95,36 +95,33 @@ public:
     {
         nos_.wrapForDecode((char *)buffer, 0, nos_.blockLength(), nos_.templateVersion());
 
-        int64_t tmpInt;
-        const char *tmpChar;
-
-        tmpChar = nos_.Account();
-        tmpChar = nos_.ClOrdID();
-        tmpInt = nos_.HandInst();
-        tmpInt = nos_.CustOrderHandlingInst();
-        tmpInt = nos_.OrderQty().mantissa();
-        tmpInt = nos_.OrdType();
-        tmpInt = nos_.Price().mantissa();
-        tmpInt = nos_.Price().exponent();
-        tmpInt = nos_.Side();
-        tmpChar = nos_.Symbol();
-        tmpInt = nos_.TimeInForce();
-        tmpInt = nos_.TransactTime();
-        tmpInt = nos_.ManualOrderIndicator();
-        tmpChar = nos_.AllocAccount();
-        tmpInt = nos_.StopPx().mantissa();
-        tmpInt = nos_.StopPx().exponent();
-        tmpChar = nos_.SecurityDesc();
-        tmpInt = nos_.MinQty().mantissa();
-        tmpChar = nos_.SecurityType();
-        tmpInt = nos_.CustomerOrFirm();
-        tmpInt = nos_.MaxShow().mantissa();
-        tmpInt = nos_.ExpireDate();
-        tmpChar = nos_.SelfMatchPreventionID();
-        tmpInt = nos_.CtiCode();
-        tmpChar = nos_.GiveUpFirm();
-        tmpChar = nos_.CmtaGiveupCD();
-        tmpChar = nos_.CorrelationClOrdID();
+        nos_.account();
+        nos_.clOrdID();
+        nos_.handInst();
+        nos_.custOrderHandlingInst();
+        nos_.orderQty().mantissa();
+        nos_.ordType();
+        nos_.price().mantissa();
+        nos_.price().exponent();
+        nos_.side();
+        nos_.symbol();
+        nos_.timeInForce();
+        nos_.transactTime();
+        nos_.manualOrderIndicator();
+        nos_.allocAccount();
+        nos_.stopPx().mantissa();
+        nos_.stopPx().exponent();
+        nos_.securityDesc();
+        nos_.minQty().mantissa();
+        nos_.securityType();
+        nos_.customerOrFirm();
+        nos_.maxShow().mantissa();
+        nos_.expireDate();
+        nos_.selfMatchPreventionID();
+        nos_.ctiCode();
+        nos_.giveUpFirm();
+        nos_.cmtaGiveupCD();
+        nos_.correlationClOrdID();
 
         return nos_.size();
     };

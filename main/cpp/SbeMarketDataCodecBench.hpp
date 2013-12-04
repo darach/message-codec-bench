@@ -28,38 +28,38 @@ public:
     virtual int encode(char *buffer)
     {
         messageHeader_.wrap(buffer, 0, 0)
-                      .templateId(MarketDataIncrementalRefreshTrades::templateId())
-                      .version(MarketDataIncrementalRefreshTrades::templateVersion())
-                      .blockLength(MarketDataIncrementalRefreshTrades::blockLength());
+                      .templateId(marketData_.templateId())
+                      .version(marketData_.templateVersion())
+                      .blockLength(marketData_.blockLength());
 
-        marketData_.wrapForEncode(buffer + MessageHeader::size(), 0)
-                   .TransactTime(1234L)
-                   .EventTimeDelta(987)
-                   .MatchEventIndicator(MatchEventIndicator::END_EVENT);
+        marketData_.wrapForEncode(buffer + messageHeader_.size(), 0)
+                   .transactTime(1234L)
+                   .eventTimeDelta(987)
+                   .matchEventIndicator(MatchEventIndicator::END_EVENT);
 
         MarketDataIncrementalRefreshTrades::MdIncGrp &mdIncGrp = marketData_.mdIncGrpCount(2);
 
         mdIncGrp.next();
-        mdIncGrp.TradeId(1234L);
-        mdIncGrp.SecurityId(56789L);
-        mdIncGrp.MdEntryPx().mantissa(50);
-        mdIncGrp.MdEntrySize().mantissa(10);
-        mdIncGrp.NumberOfOrders(1);
-        mdIncGrp.MdUpdateAction(MDUpdateAction::NEW);
-        mdIncGrp.RptSeq((short)1);
-        mdIncGrp.AggressorSide(Side::BUY);
-        mdIncGrp.MdEntryType(MDEntryType::BID);
+        mdIncGrp.tradeId(1234L);
+        mdIncGrp.securityId(56789L);
+        mdIncGrp.mdEntryPx().mantissa(50);
+        mdIncGrp.mdEntrySize().mantissa(10);
+        mdIncGrp.numberOfOrders(1);
+        mdIncGrp.mdUpdateAction(MDUpdateAction::NEW);
+        mdIncGrp.rptSeq((short)1);
+        mdIncGrp.aggressorSide(Side::BUY);
+        mdIncGrp.mdEntryType(MDEntryType::BID);
 
         mdIncGrp.next();
-        mdIncGrp.TradeId(1234L);
-        mdIncGrp.SecurityId(56789L);
-        mdIncGrp.MdEntryPx().mantissa(50);
-        mdIncGrp.MdEntrySize().mantissa(10);
-        mdIncGrp.NumberOfOrders(1);
-        mdIncGrp.MdUpdateAction(MDUpdateAction::NEW);
-        mdIncGrp.RptSeq((short)1);
-        mdIncGrp.AggressorSide(Side::SELL);
-        mdIncGrp.MdEntryType(MDEntryType::OFFER);
+        mdIncGrp.tradeId(1234L);
+        mdIncGrp.securityId(56789L);
+        mdIncGrp.mdEntryPx().mantissa(50);
+        mdIncGrp.mdEntrySize().mantissa(10);
+        mdIncGrp.numberOfOrders(1);
+        mdIncGrp.mdUpdateAction(MDUpdateAction::NEW);
+        mdIncGrp.rptSeq((short)1);
+        mdIncGrp.aggressorSide(Side::SELL);
+        mdIncGrp.mdEntryType(MDEntryType::OFFER);
 
         return MessageHeader::size() + marketData_.size();
     };
@@ -74,25 +74,25 @@ public:
         actingVersion = messageHeader_.version();
         actingBlockLength = messageHeader_.blockLength();
 
-        marketData_.wrapForDecode((char *)buffer, MessageHeader::size(), actingBlockLength, actingVersion);
+        marketData_.wrapForDecode((char *)buffer, messageHeader_.size(), actingBlockLength, actingVersion);
 
-        marketData_.TransactTime();
-        marketData_.EventTimeDelta();
-        marketData_.MatchEventIndicator();
+        marketData_.transactTime();
+        marketData_.eventTimeDelta();
+        marketData_.matchEventIndicator();
 
         MarketDataIncrementalRefreshTrades::MdIncGrp &mdIncGrp = marketData_.mdIncGrp();
         while (mdIncGrp.hasNext())
         {
             mdIncGrp.next();
-            mdIncGrp.TradeId();
-            mdIncGrp.SecurityId();
-            mdIncGrp.MdEntryPx().mantissa();
-            mdIncGrp.MdEntrySize().mantissa();
-            mdIncGrp.NumberOfOrders();
-            mdIncGrp.MdUpdateAction();
-            mdIncGrp.RptSeq();
-            mdIncGrp.AggressorSide();
-            mdIncGrp.MdEntryType();
+            mdIncGrp.tradeId();
+            mdIncGrp.securityId();
+            mdIncGrp.mdEntryPx().mantissa();
+            mdIncGrp.mdEntrySize().mantissa();
+            mdIncGrp.numberOfOrders();
+            mdIncGrp.mdUpdateAction();
+            mdIncGrp.rptSeq();
+            mdIncGrp.aggressorSide();
+            mdIncGrp.mdEntryType();
         }
 
         return MessageHeader::size() + marketData_.size();
