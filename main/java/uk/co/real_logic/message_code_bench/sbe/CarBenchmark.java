@@ -112,7 +112,8 @@ public class CarBenchmark
             car.someNumbers(i, i);
         }
 
-        car.extras().sportsPack(true)
+        car.extras().clear()
+                    .sportsPack(true)
                     .sunRoof(true);
 
         car.engine().capacity(4200)
@@ -234,7 +235,7 @@ public class CarBenchmark
                           Integer.valueOf(runNumber),
                           Long.valueOf(totalDuration / reps),
                           benchmark.getClass().getName(),
-                          Integer.valueOf(state.car.size()));
+                          Integer.valueOf(state.car.size() + state.messageHeader.size()));
     }
 
     private static void perfTestDecode(final int runNumber)
@@ -255,6 +256,6 @@ public class CarBenchmark
                           Integer.valueOf(runNumber),
                           Long.valueOf(totalDuration / reps),
                           benchmark.getClass().getName(),
-                          Integer.valueOf(state.car.size()));
+                          Integer.valueOf(state.car.size() + state.messageHeader.size()));
     }
 }
