@@ -26,7 +26,7 @@ public:
     {
         buffer_ = new char[MAX_CAR_BUFFER];
         bench_.runEncode(buffer_, MAX_N);  // set buffer up for decoding runs
-        std::cout << "MAX N = " << MAX_N << std::endl;
+        std::cout << "MAX N = " << MAX_N << " [for Multiple runs]" << std::endl;
     };
 
     virtual void tearDown(void)

@@ -47,7 +47,7 @@ class SbeNewOrderSingleCodecBench : public CodecBench
 public:
     virtual int encode(char *buffer)
     {
-        nos_.resetForEncode(buffer, 0)
+        nos_.wrapForEncode(buffer, 0)
             .putAccount(ACCOUNT)
             .putClOrdID(CLORDID)
             .HandInst(HandInst::AUTOMATED_EXECUTION)
@@ -93,7 +93,7 @@ public:
 
     virtual int decode(const char *buffer)
     {
-        nos_.resetForDecode((char *)buffer, 0, nos_.blockLength(), nos_.templateVersion());
+        nos_.wrapForDecode((char *)buffer, 0, nos_.blockLength(), nos_.templateVersion());
 
         int64_t tmpInt;
         const char *tmpChar;

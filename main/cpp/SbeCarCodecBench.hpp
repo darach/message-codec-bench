@@ -34,7 +34,7 @@ class SbeCarCodecBench : public CodecBench
 public:
     virtual int encode(char *buffer)
     {
-        car.resetForEncode(buffer, 0)
+        car.wrapForEncode(buffer, 0)
            .serialNumber(1234)
            .modelYear(2013)
            .available(BooleanType::YES)
@@ -42,7 +42,7 @@ public:
            .putVehicleCode(VEHICLE_CODE)
            .putSomeNumbers((char *)SOMENUMBERS);
 
-        car.extras()
+        car.extras().clear()
            .cruiseControl(true)
            .sportsPack(true)
            .sunRoof(false);
@@ -81,12 +81,12 @@ public:
 
     virtual int decode(const char *buffer)
     {
-        car.resetForDecode((char *)buffer, 0, car.blockLength(), car.templateVersion());
+        car.wrapForDecode((char *)buffer, 0, Car::blockLength(), Car::templateVersion());
 
         int64_t tmpInt;
         const char *tmpChar;
-        bool tmpBool;
         double tmpDouble;
+        bool tmpBool;
 
         tmpInt = car.serialNumber();
         tmpInt = car.modelYear();

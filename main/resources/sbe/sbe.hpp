@@ -40,10 +40,17 @@ namespace sbe {
  * Define some byte ordering macros
  * These use gcc builtins. MSVC should be similar.
  */
-#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-    #define SBE_BIG_ENDIAN_ENCODE_16(v) __builtin_bswap16(v)
-    #define SBE_BIG_ENDIAN_ENCODE_32(v) __builtin_bswap32(v)
-    #define SBE_BIG_ENDIAN_ENCODE_64(v) __builtin_bswap64(v)
+#if defined(WIN32)
+    #define SBE_BIG_ENDIAN_ENCODE_16(v) _byteswap_ushort(v)
+    #define SBE_BIG_ENDIAN_ENCODE_32(v) _byteswap_ulong(v)
+    #define SBE_BIG_ENDIAN_ENCODE_64(v) _byteswap_uint64(v)
+    #define SBE_LITTLE_ENDIAN_ENCODE_16(v) (v)
+    #define SBE_LITTLE_ENDIAN_ENCODE_32(v) (v)
+    #define SBE_LITTLE_ENDIAN_ENCODE_64(v) (v)
+#elif __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+    #define SBE_BIG_ENDIAN_ENCODE_16(v) __builtin_bswap16(v) 
+    #define SBE_BIG_ENDIAN_ENCODE_32(v) __builtin_bswap32(v) 
+    #define SBE_BIG_ENDIAN_ENCODE_64(v) __builtin_bswap64(v) 
     #define SBE_LITTLE_ENDIAN_ENCODE_16(v) (v)
     #define SBE_LITTLE_ENDIAN_ENCODE_32(v) (v)
     #define SBE_LITTLE_ENDIAN_ENCODE_64(v) (v)
@@ -62,24 +69,20 @@ namespace sbe {
 class FixedFlyweight
 {
 public:
-    virtual FixedFlyweight &reset(char *buffer, const int offset, const int actingVersion) = 0;
-    virtual int size(void) const = 0;
+    virtual FixedFlyweight &wrap(char *buffer, const int offset, const int actingVersion) = 0;
 };
 
 /// Interface for MessageFlyweight
 class MessageFlyweight
 {
 public:
-    virtual MessageFlyweight &resetForEncode(char *buffer, const int offset) = 0;
-    virtual MessageFlyweight &resetForDecode(char *buffer, const int offset, const int actingBlockLength, const int actingVersion) = 0;
-    virtual uint64_t blockLength(void) const = 0;
+    virtual MessageFlyweight &wrapForEncode(char *buffer, const int offset) = 0;
+    virtual MessageFlyweight &wrapForDecode(char *buffer, const int offset, const int actingBlockLength, const int actingVersion) = 0;
     virtual uint64_t offset(void) const = 0;
     virtual uint64_t position(void) const = 0;
     virtual void position(const uint64_t position) = 0;
     virtual char *buffer(void) = 0;
     virtual int size(void) const = 0;
-    virtual int templateId(void) const = 0;
-    virtual int templateVersion(void) const = 0;
     virtual int actingVersion(void) const = 0;
 };
 
@@ -87,8 +90,8 @@ public:
 class GroupFlyweight
 {
 public:
-    virtual void resetForDecode(MessageFlyweight *message, const int actingVersion) = 0;
-    virtual void resetForEncode(MessageFlyweight *message, const int count) = 0;
+    virtual void wrapForDecode(MessageFlyweight *message, const int actingVersion) = 0;
+    virtual void wrapForEncode(MessageFlyweight *message, const int count) = 0;
     virtual int count(void) const = 0;
     virtual bool hasNext(void) const = 0;
     virtual GroupFlyweight &next(void) = 0;
