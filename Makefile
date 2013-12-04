@@ -24,8 +24,8 @@ OBJDIR=       $(BUILD_DIR)
 CC=           gcc
 CXX=          g++
 LINK=         gcc
-CFLAGS=       -Wall -O3
-CXXFLAGS=     -Wall -O3
+CFLAGS=       -Wall -Ofast
+CXXFLAGS=     -Wall -Ofast
 LD_LIBS=
 JAVA=         java
 SBE_JAR=      lib/sbe/sbe-0.1.jar
@@ -53,14 +53,18 @@ CAR_OBJS=         $(addprefix $(OBJDIR)/, $(CAR_SRCS:.cpp=.o))
 NOS_SRCS=         NosBench.cpp benchlet-main.cpp
 NOS_OBJS=         $(addprefix $(OBJDIR)/, $(NOS_SRCS:.cpp=.o))
 
+MD_SRCS=          MarketDataBench.cpp benchlet-main.cpp
+MD_OBJS=          $(addprefix $(OBJDIR)/, $(MD_SRCS:.cpp=.o))
+
 CXXFLAGS += -I$(SRC_DIR) -I$(BUILD_DIR) -I$(SBE_INCLUDE_DIR)
 CFLAGS +=   -I..
 LD_LIBS +=  -lstdc++
 
 BENCHLET_CAR_RUNNER=    $(BUILD_DIR)/benchlet-car-runner
 BENCHLET_NOS_RUNNER=    $(BUILD_DIR)/benchlet-nos-runner
+BENCHLET_MD_RUNNER=    $(BUILD_DIR)/benchlet-md-runner
 
-all:	$(BENCHLET_CAR_RUNNER) $(BENCHLET_NOS_RUNNER)
+all:	$(BENCHLET_CAR_RUNNER) $(BENCHLET_NOS_RUNNER) $(BENCHLET_MD_RUNNER)
 
 init:       | $(BUILD_DIR)
 
@@ -85,7 +89,17 @@ $(BENCHLET_NOS_RUNNER): init sbe-fix-codec $(NOS_OBJS)
 run-sbe-nos-benchmark:  $(BENCHLET_NOS_RUNNER)
 						$(BENCHLET_NOS_RUNNER)
 
-run-benchmarks: run-sbe-car-benchmark
+$(BENCHLET_MD_RUNNER): init sbe-fix-codec $(MD_OBJS)
+						$(LINK) $(MD_OBJS) -o $(BENCHLET_MD_RUNNER) $(LD_LIBS)
+
+run-sbe-md-benchmark:  $(BENCHLET_MD_RUNNER)
+						$(BENCHLET_MD_RUNNER)
+
+run-md-benchmarks: run-sbe-md-benchmark
+
+run-car-benchmarks: run-sbe-car-benchmark
+
+run-benchmarks:     run-md-benchmarks run-car-benchmarks
 
 $(OBJDIR)/%.o : %.cpp
 				$(CC) -c $(CXXFLAGS) $< -o $@

@@ -146,8 +146,10 @@ public:
             benchmark->setUp();
             for (int i = 0, max_i = benchmark->batches(); i < max_i; i++)
             {
+                int j = 0, max_j = benchmark->iterations();
+
                 startTimestamp = currentTimestamp();
-                for (int j = 0, max_j = benchmark->iterations(); j < max_j; j++)
+                for (; j < max_j; j++)
                 {
                     benchmark->benchmarkBody();
                 }
@@ -162,7 +164,7 @@ public:
             double elapsedPerIteration = elapsedPerBatch / (double)benchmark->iterations();
             double throughputKopsps = 1000000.0 / elapsedPerIteration;
             std::cout << " Avg elapsed/batch " << elapsedPerBatch << " nanoseconds" << std::endl;
-            std::cout << " Avg elapsed/iterations " << elapsedPerIteration << " nanos" << std::endl;
+            std::cout << " Avg nanos/op " << elapsedPerIteration << " nanos/op" << std::endl;
             std::cout << " Throughput " << throughputKopsps << " Kops/sec." << std::endl;
             benchmark->stats(stats);
             benchmark->tearDown();
