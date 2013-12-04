@@ -158,7 +158,12 @@ public:
                 total += elapsedNanos;
                 std::cout << " Elapsed " << elapsedNanos << " nanoseconds. " << nanospop << " nanos/op. " << opspsec/1000.0 << " Kops/sec." << std::endl;
             }
-            std::cout << " Avg elapsed " << (double)total / (double)benchmark->batches() << " nanoseconds" << std::endl;
+            double elapsedPerBatch = (double)total / (double)benchmark->batches();
+            double elapsedPerIteration = elapsedPerBatch / (double)benchmark->iterations();
+            double throughputKopsps = 1000000.0 / elapsedPerIteration;
+            std::cout << " Avg elapsed/batch " << elapsedPerBatch << " nanoseconds" << std::endl;
+            std::cout << " Avg elapsed/iterations " << elapsedPerIteration << " nanos" << std::endl;
+            std::cout << " Throughput " << throughputKopsps << " Kops/sec." << std::endl;
             benchmark->stats(stats);
             benchmark->tearDown();
             total = 0;

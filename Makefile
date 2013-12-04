@@ -85,6 +85,8 @@ $(BENCHLET_NOS_RUNNER): init sbe-fix-codec $(NOS_OBJS)
 run-sbe-nos-benchmark:  $(BENCHLET_NOS_RUNNER)
 						$(BENCHLET_NOS_RUNNER)
 
+run-benchmarks: run-sbe-car-benchmark
+
 $(OBJDIR)/%.o : %.cpp
 				$(CC) -c $(CXXFLAGS) $< -o $@
 
