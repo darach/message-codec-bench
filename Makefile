@@ -19,7 +19,7 @@
 .SUFFIXES:    .cpp .o
 
 SRC_DIR=      main/cpp
-BUILD_DIR=    target/main/cpp
+BUILD_DIR=    target/gen/cpp
 OBJDIR=       $(BUILD_DIR)
 CC=           gcc
 CXX=          g++
@@ -35,6 +35,18 @@ SBE_TARGET_DIR=   $(BUILD_DIR)
 SBE_ARGS=     -Dsbe.output.dir="$(SBE_TARGET_DIR)" -Dsbe.target.language="Cpp99"
 SBE_INCLUDE_DIR= main/resources
 
+#ifeq ($(origin PROTOBUF_HOME), undefined)
+#    PROTOBUF_HOME_NOT_DEFINED=  1
+#endif
+
+PROTOBUF_RESOURCES=     main/resources/protobuf
+PROTOBUF_HOME?=         $(HOME)/dev/protobuf-2.5.0
+PROTOBUF_CAR_SCHEMA=    main/resources/protobuf/car.proto
+PROTOBUF_FIX_SCHEMA=    main/resources/protobuf/fix-messages.proto
+PROTOBUF_TARGET_DIR=    $(BUILD_DIR)
+PROTOBUF_CMD=           $(PROTOBUF_HOME)/bin/protoc
+PROTOBUF_LIBS=          -L$(PROTOBUF_HOME)/lib -lprotobuf
+
 PLAT=         $(shell uname -s)
 ifeq ($(PLAT),Darwin)
 	CFLAGS +=   -DDarwin
@@ -47,24 +59,32 @@ endif
 vpath %.cpp   $(SRC_DIR)
 vpath %.hpp   $(SRC_DIR)
 
-CAR_SRCS=         CarBench.cpp benchlet-main.cpp
-CAR_OBJS=         $(addprefix $(OBJDIR)/, $(CAR_SRCS:.cpp=.o))
+SBE_CAR_SRCS=         CarBench.cpp benchlet-main.cpp
+SBE_CAR_OBJS=         $(addprefix $(OBJDIR)/, $(SBE_CAR_SRCS:.cpp=.o))
 
-NOS_SRCS=         NosBench.cpp benchlet-main.cpp
-NOS_OBJS=         $(addprefix $(OBJDIR)/, $(NOS_SRCS:.cpp=.o))
+SBE_NOS_SRCS=         NosBench.cpp benchlet-main.cpp
+SBE_NOS_OBJS=         $(addprefix $(OBJDIR)/, $(SBE_NOS_SRCS:.cpp=.o))
 
-MD_SRCS=          MarketDataBench.cpp benchlet-main.cpp
-MD_OBJS=          $(addprefix $(OBJDIR)/, $(MD_SRCS:.cpp=.o))
+SBE_MD_SRCS=          MarketDataBench.cpp benchlet-main.cpp
+SBE_MD_OBJS=          $(addprefix $(OBJDIR)/, $(SBE_MD_SRCS:.cpp=.o))
 
-CXXFLAGS += -I$(SRC_DIR) -I$(BUILD_DIR) -I$(SBE_INCLUDE_DIR)
+PB_MD_SRCS=           PbMarketDataBench.cpp benchlet-main.cpp
+PB_MD_OBJS=           $(addprefix $(OBJDIR)/, $(PB_MD_SRCS:.cpp=.o))
+PB_MD_OBJS+=          $(addprefix $(OBJDIR)/, fix-messages.pb.o)
+
+CXXFLAGS += -I$(SRC_DIR) -I$(BUILD_DIR) -I$(SBE_INCLUDE_DIR) -I$(PROTOBUF_HOME)/include
 CFLAGS +=   -I..
 LD_LIBS +=  -lstdc++
 
-BENCHLET_CAR_RUNNER=    $(BUILD_DIR)/benchlet-car-runner
-BENCHLET_NOS_RUNNER=    $(BUILD_DIR)/benchlet-nos-runner
-BENCHLET_MD_RUNNER=    $(BUILD_DIR)/benchlet-md-runner
+BENCHLET_SBE_CAR_RUNNER=    $(BUILD_DIR)/benchlet-sbe-car-runner
+BENCHLET_SBE_NOS_RUNNER=    $(BUILD_DIR)/benchlet-sbe-nos-runner
+BENCHLET_SBE_MD_RUNNER=     $(BUILD_DIR)/benchlet-sbe-md-runner
 
-all:	$(BENCHLET_CAR_RUNNER) $(BENCHLET_NOS_RUNNER) $(BENCHLET_MD_RUNNER)
+BENCHLET_PB_MD_RUNNER=      $(BUILD_DIR)/benchlet-pb-md-runner
+
+.PHONY: clean
+
+all:	$(BENCHLET_SBE_CAR_RUNNER) $(BENCHLET_SBE_NOS_RUNNER) $(BENCHLET_SBE_MD_RUNNER)
 
 init:       | $(BUILD_DIR)
 
@@ -74,26 +94,38 @@ $(BUILD_DIR):
 sbe-car-codec:  init $(SBE_CAR_SCHEMA)
 				$(JAVA) $(SBE_ARGS) -jar $(SBE_JAR) $(SBE_CAR_SCHEMA)
 
-$(BENCHLET_CAR_RUNNER): init sbe-car-codec $(CAR_OBJS)
-						$(LINK) $(CAR_OBJS) -o $(BENCHLET_CAR_RUNNER) $(LD_LIBS)
-
-run-sbe-car-benchmark:  $(BENCHLET_CAR_RUNNER)
-						$(BENCHLET_CAR_RUNNER)
-
 sbe-fix-codec:  init $(SBE_FIX_SCHEMA)
 				$(JAVA) $(SBE_ARGS) -jar $(SBE_JAR) $(SBE_FIX_SCHEMA)
 
-$(BENCHLET_NOS_RUNNER): init sbe-fix-codec $(NOS_OBJS)
-						$(LINK) $(NOS_OBJS) -o $(BENCHLET_NOS_RUNNER) $(LD_LIBS)
+protobuf-car-codec: init $(PROTOBUF_CAR_SCHEMA)
+					$(PROTOBUF_CMD) -I$(PROTOBUF_RESOURCES) --cpp_out $(PROTOBUF_TARGET_DIR) $(PROTOBUF_CAR_SCHEMA)
 
-run-sbe-nos-benchmark:  $(BENCHLET_NOS_RUNNER)
-						$(BENCHLET_NOS_RUNNER)
+protobuf-fix-codec: init $(PROTOBUF_FIX_SCHEMA)
+					$(PROTOBUF_CMD) -I$(PROTOBUF_RESOURCES) --cpp_out "$(PROTOBUF_TARGET_DIR)" $(PROTOBUF_FIX_SCHEMA)
 
-$(BENCHLET_MD_RUNNER): init sbe-fix-codec $(MD_OBJS)
-						$(LINK) $(MD_OBJS) -o $(BENCHLET_MD_RUNNER) $(LD_LIBS)
+$(BENCHLET_SBE_CAR_RUNNER): init sbe-car-codec $(SBE_CAR_OBJS)
+			    			$(LINK) $(SBE_CAR_OBJS) -o $(BENCHLET_SBE_CAR_RUNNER) $(LD_LIBS)
 
-run-sbe-md-benchmark:  $(BENCHLET_MD_RUNNER)
-						$(BENCHLET_MD_RUNNER)
+$(BENCHLET_SBE_NOS_RUNNER): init sbe-fix-codec $(SBE_NOS_OBJS)
+			    			$(LINK) $(SBE_NOS_OBJS) -o $(BENCHLET_SBE_NOS_RUNNER) $(LD_LIBS)
+
+$(BENCHLET_SBE_MD_RUNNER): init sbe-fix-codec $(SBE_MD_OBJS)
+						$(LINK) $(SBE_MD_OBJS) -o $(BENCHLET_SBE_MD_RUNNER) $(LD_LIBS)
+
+$(BENCHLET_PB_MD_RUNNER): init protobuf-fix-codec $(PB_MD_OBJS)
+						$(LINK) $(PB_MD_OBJS) -o $(BENCHLET_PB_MD_RUNNER) $(LD_LIBS) $(PROTOBUF_LIBS)
+
+run-sbe-car-benchmark:  $(BENCHLET_SBE_CAR_RUNNER)
+						$(BENCHLET_SBE_CAR_RUNNER)
+
+run-sbe-nos-benchmark:  $(BENCHLET_SBE_NOS_RUNNER)
+						$(BENCHLET_SBE_NOS_RUNNER)
+
+run-sbe-md-benchmark:  $(BENCHLET_SBE_MD_RUNNER)
+					   $(BENCHLET_SBE_MD_RUNNER)
+
+run-pb-md-benchmark:  $(BENCHLET_PB_MD_RUNNER)
+					  $(BENCHLET_PB_MD_RUNNER)
 
 run-md-benchmarks: run-sbe-md-benchmark
 
@@ -102,7 +134,10 @@ run-car-benchmarks: run-sbe-car-benchmark
 run-benchmarks:     run-md-benchmarks run-car-benchmarks
 
 $(OBJDIR)/%.o : %.cpp
-				$(CC) -c $(CXXFLAGS) $< -o $@
+				$(CXX) -c $(CXXFLAGS) $< -o $@
+
+$(OBJDIR)/%.o : %.cc
+				$(CXX) -c $(CXXFLAGS) $< -o $@
 
 clean:
 		$(RM) -rf $(BUILD_DIR)
