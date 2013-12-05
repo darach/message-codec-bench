@@ -167,7 +167,7 @@ public class MarketDataBenchmark
                           Integer.valueOf(runNumber),
                           Long.valueOf(totalDuration / reps),
                           benchmark.getClass().getName(),
-                          Integer.valueOf(state.marketData.size()));
+                          Integer.valueOf(state.marketData.size() + state.messageHeader.size()));
     }
 
     private static void perfTestDecode(final int runNumber)
@@ -188,6 +188,6 @@ public class MarketDataBenchmark
                           Integer.valueOf(runNumber),
                           Long.valueOf(totalDuration / reps),
                           benchmark.getClass().getName(),
-                          Integer.valueOf(state.marketData.size()));
+                          Integer.valueOf(state.marketData.size() + state.messageHeader.size()));
     }
 }
