@@ -127,7 +127,7 @@ run-sbe-md-benchmark:  $(BENCHLET_SBE_MD_RUNNER)
 run-pb-md-benchmark:  $(BENCHLET_PB_MD_RUNNER)
 					  $(BENCHLET_PB_MD_RUNNER)
 
-run-md-benchmarks: run-sbe-md-benchmark
+run-md-benchmarks: run-sbe-md-benchmark run-pb-md-benchmark
 
 run-car-benchmarks: run-sbe-car-benchmark
 
