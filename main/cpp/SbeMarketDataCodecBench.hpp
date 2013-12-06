@@ -22,7 +22,7 @@
 
 using namespace uk_co_real_logic_sbe_samples_fix;
 
-class SbeMarketDataCodecBench : public CodecBench
+class SbeMarketDataCodecBench : public CodecBench<SbeMarketDataCodecBench>
 {
 public:
     virtual int encode(char *buffer)

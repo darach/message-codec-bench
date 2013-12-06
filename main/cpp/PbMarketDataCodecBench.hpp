@@ -23,7 +23,7 @@
 
 using namespace uk::co::real_logic::protobuf::examples;
 
-class PbMarketDataCodecBench : public CodecBench
+class PbMarketDataCodecBench : public CodecBench<PbMarketDataCodecBench>
 {
 public:
     virtual int encode(char *buffer)

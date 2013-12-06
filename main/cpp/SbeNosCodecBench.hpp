@@ -42,7 +42,7 @@ char CMTAGIVEUPCD[] = "OH";
 // 20
 char CORRELATIONCLORDID[] = "NewJackHawtClOrdId01";
 
-class SbeNewOrderSingleCodecBench : public CodecBench
+class SbeNewOrderSingleCodecBench : public CodecBench<SbeNewOrderSingleCodecBench>
 {
 public:
     virtual int encode(char *buffer)

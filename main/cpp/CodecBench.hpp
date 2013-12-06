@@ -17,11 +17,19 @@
 #define _CODEC_BENCH_HPP
 
 // Interface for encoding and decoding and also benchmark harness
+template <typename Derived>
 class CodecBench
 {
 public:
-    virtual int encode(char *) = 0;
-    virtual int decode(const char *) = 0;
+    int encode_buffer(char *buffer)
+    {
+        return static_cast<Derived *>(this)->encode(buffer);
+    };
+
+    int decode_buffer(const char *buffer)
+    {
+        return static_cast<Derived *>(this)->decode(buffer);
+    };
 
     /*
      * Benchmarks
@@ -32,7 +40,7 @@ public:
      */
     void runEncode(char *buffer)
     {
-        encode(buffer);
+        encode_buffer(buffer);
     };
 
     /*
@@ -40,7 +48,7 @@ public:
      */
     void runDecode(const char *buffer)
     {
-        decode(buffer);
+        decode_buffer(buffer);
     };
 
     /*
@@ -48,8 +56,8 @@ public:
      */
     void runEncodeAndDecode(char *buffer)
     {
-        encode(buffer);
-        decode(buffer);
+        encode_buffer(buffer);
+        decode_buffer(buffer);
     };
 
     /*
@@ -61,7 +69,7 @@ public:
 
         for (int i = 0; i < n; i++)
         {
-            ptr += encode(ptr);
+            ptr += encode_buffer(ptr);
         }
     };
 
@@ -74,7 +82,7 @@ public:
 
         for (int i = 0; i < n; i++)
         {
-            ptr += decode(ptr);
+            ptr += decode_buffer(ptr);
         }
     };
 
@@ -87,12 +95,12 @@ public:
 
         for (int i = 0; i < n; i++)
         {
-            ptr += encode(ptr);
+            ptr += encode_buffer(ptr);
         }
         ptr = buffer;
         for (int i = 0; i < n; i++)
         {
-            ptr += decode(ptr);
+            ptr += decode_buffer(ptr);
         }
     };
 };

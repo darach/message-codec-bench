@@ -29,10 +29,10 @@ int MAKELEN = strlen(MAKE);
 const char *MODEL = "Civic VTi";
 int MODELLEN = strlen(MODEL);
 
-class SbeCarCodecBench : public CodecBench
+class SbeCarCodecBench : public CodecBench<SbeCarCodecBench>
 {
 public:
-    virtual int encode(char *buffer)
+    int encode(char *buffer)
     {
         car.wrapForEncode(buffer, 0)
            .serialNumber(1234)
