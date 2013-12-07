@@ -51,3 +51,9 @@ Dependent build:
 Run the C++ benchmarks
 
     $ make run-benchmarks
+
+Use of Google Protocol Buffers
+------------------------------
+
+The benchmarks use protobuf 2.5.0 as comparison. For `ant`, define `protobuf.home` in a `build-local.properties` file.
+An example file is included. For `make`, define `PROTOBUF_HOME` on the command line or edit the `Makefile`.
