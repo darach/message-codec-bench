@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="RunPerfTests" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <!-- Clean build directories -->
+  <ItemGroup>
+    <DirsToClean Include=".\Adaptive.SimpleBinaryEncoding.PerfTests\bin\" />
+    <DirsToClean Include=".\Adaptive.SimpleBinaryEncoding.PerfTests\obj\" />
+  </ItemGroup>
+  <Target Name="Clean">
+    <Message Importance="high" Text="Cleaning build folders..." />
+    <RemoveDir Directories="@(DirsToClean)" />
+  </Target>
+  
+  <!-- Generate C# files with SbeTool -->
+  <Target Name="Generate" DependsOnTargets="Clean">
+    <Message Importance="high" Text="Generating FIX messages as SBE C# classes..." />
+    <Exec Command="java -Dsbe.target.language=CSHARP -Dsbe.output.dir=.\Adaptive.SimpleBinaryEncoding.PerfTests\Bench\SBE\FIX -jar ..\..\lib\sbe\sbe-0.1.jar ..\resources\sbe\fix-message-samples.xml" />
+  </Target>
+  
+  <ItemGroup>
+    <ProjectFiles Include="$(MSBuildProjectDirectory)\csharp.sln">
+      <Properties>Configuration=Release</Properties>
+    </ProjectFiles>
+  </ItemGroup>
+
+  <Target Name="Compile" DependsOnTargets="Generate">
+    <Message Importance="high" Text="Compiling solution..." />
+    <MSBuild Projects="@(ProjectFiles)" />
+  </Target>
+
+  <Target Name="RunPerfTests" DependsOnTargets="Compile">
+    <Message Importance="high" Text="Running performance tests..." />
+    <Exec Command="Adaptive.SimpleBinaryEncoding.PerfTests\bin\Release\Adaptive.SimpleBinaryEncoding.PerfTests.exe" />
+  </Target>
+</Project>
