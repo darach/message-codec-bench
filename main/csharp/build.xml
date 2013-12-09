@@ -1,20 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="RunPerfTests" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SBEVersion>0.1</SBEVersion>
+  </PropertyGroup>
   
-  <!-- Clean build directories -->
-  <ItemGroup>
-    <DirsToClean Include=".\Adaptive.SimpleBinaryEncoding.PerfTests\bin\" />
-    <DirsToClean Include=".\Adaptive.SimpleBinaryEncoding.PerfTests\obj\" />
-  </ItemGroup>
-  <Target Name="Clean">
-    <Message Importance="high" Text="Cleaning build folders..." />
-    <RemoveDir Directories="@(DirsToClean)" />
-  </Target>
   
   <!-- Generate C# files with SbeTool -->
-  <Target Name="Generate" DependsOnTargets="Clean">
+  <Target Name="Generate">
     <Message Importance="high" Text="Generating FIX messages as SBE C# classes..." />
-    <Exec Command="java -Dsbe.target.language=CSHARP -Dsbe.output.dir=.\Adaptive.SimpleBinaryEncoding.PerfTests\Bench\SBE\FIX -jar ..\..\lib\sbe\sbe-0.1.jar ..\resources\sbe\fix-message-samples.xml" />
+    <Exec Command="java -Dsbe.target.language=CSHARP -Dsbe.output.dir=.\Adaptive.SimpleBinaryEncoding.PerfTests\Bench\SBE\FIX -jar ..\..\lib\sbe\sbe-$(SBEVersion).jar ..\resources\sbe\fix-message-samples.xml" />
   </Target>
   
   <ItemGroup>
@@ -32,4 +26,26 @@
     <Message Importance="high" Text="Running performance tests..." />
     <Exec Command="Adaptive.SimpleBinaryEncoding.PerfTests\bin\Release\Adaptive.SimpleBinaryEncoding.PerfTests.exe" />
   </Target>
+
+  <!-- this target can be used to compile SBE.dll from 'simple-binary-encoding' (both repos must be sibling)  -->
+  <ItemGroup>
+    <JarFiles Include="$(MSBuildProjectDirectory)\..\..\..\simple-binary-encoding\target\dist\sbe-$(SBEVersion)-*.jar" />
+  </ItemGroup>
+  <ItemGroup>
+    <SbeDotNetFiles Include="$(MSBuildProjectDirectory)\..\..\..\simple-binary-encoding\target\main\csharp\bin\Release\*" />
+  </ItemGroup>
+  <Target Name="BuildSBE">
+    <MSBuild Projects="$(MSBuildProjectDirectory)\..\..\..\simple-binary-encoding\vs2013\build.xml" />
+    <Delete Files="$(MSBuildProjectDirectory)\..\..\lib\sbe\sbe.dll" />
+    <Delete Files="$(MSBuildProjectDirectory)\..\..\lib\sbe\sbe.exe" />
+    <Copy SourceFiles="@(SbeDotNetFiles)"
+          DestinationFolder="$(MSBuildProjectDirectory)\..\..\lib\sbe\" />
+
+    <Exec Command="ant -buildfile $(MSBuildProjectDirectory)\..\..\..\simple-binary-encoding\build.xml dist"/>
+    <Delete Files="$(MSBuildProjectDirectory)\..\..\lib\sbe\sbe-$(SBEVersion).jar" />
+    <Copy SourceFiles="@(JarFiles)" 
+          DestinationFiles="@(JarFiles->'$(MSBuildProjectDirectory)\..\..\lib\sbe\sbe-$(SBEVersion).jar')"
+          />
+  </Target>
+  
 </Project>
