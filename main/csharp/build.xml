@@ -5,18 +5,8 @@
   </PropertyGroup>
   
   
-  <!-- Clean build directories -->
-  <ItemGroup>
-    <DirsToClean Include=".\Adaptive.SimpleBinaryEncoding.PerfTests\bin\" />
-    <DirsToClean Include=".\Adaptive.SimpleBinaryEncoding.PerfTests\obj\" />
-  </ItemGroup>
-  <Target Name="Clean">
-    <Message Importance="high" Text="Cleaning build folders..." />
-    <RemoveDir Directories="@(DirsToClean)" />
-  </Target>
-  
   <!-- Generate C# files with SbeTool -->
-  <Target Name="Generate" DependsOnTargets="Clean">
+  <Target Name="Generate">
     <Message Importance="high" Text="Generating FIX messages as SBE C# classes..." />
     <Exec Command="java -Dsbe.target.language=CSHARP -Dsbe.output.dir=.\Adaptive.SimpleBinaryEncoding.PerfTests\Bench\SBE\FIX -jar ..\..\lib\sbe\sbe-$(SBEVersion).jar ..\resources\sbe\fix-message-samples.xml" />
   </Target>
