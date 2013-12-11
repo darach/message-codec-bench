@@ -20,6 +20,7 @@
 
 SRC_DIR=      main/cpp
 BUILD_DIR=    target/gen/cpp
+DEV_DIR=      $(HOME)/dev
 OBJDIR=       $(BUILD_DIR)
 CC=           gcc
 CXX=          g++
@@ -39,8 +40,9 @@ SBE_INCLUDE_DIR= main/resources
 #    PROTOBUF_HOME_NOT_DEFINED=  1
 #endif
 
+PROTOBUF_VSN?=		protobuf-2.5.0
 PROTOBUF_RESOURCES=     main/resources/protobuf
-PROTOBUF_HOME?=         $(HOME)/dev/protobuf-2.5.0
+PROTOBUF_HOME?=         $(HOME)/dev/$(PROTOBUF_VSN)
 PROTOBUF_CAR_SCHEMA=    main/resources/protobuf/car.proto
 PROTOBUF_FIX_SCHEMA=    main/resources/protobuf/fix-messages.proto
 PROTOBUF_TARGET_DIR=    $(BUILD_DIR)
@@ -141,3 +143,20 @@ $(OBJDIR)/%.o : %.cc
 
 clean:
 		$(RM) -rf $(BUILD_DIR)
+
+deps-protobuf:
+	if [ -x $(PROTOBUF_HOME) ] ; then \
+		echo "Found: Protobuf installation: $(PROTOBUF_HOME)" ; \
+	else \
+		mkdir -p $(DEV_DIR)/deps ; \
+		cd deps ; \
+		wget -O $(DEV_DIR)/deps/$(PROTOBUF_VSN).tar.gz https://protobuf.googlecode.com/files/$(PROTOBUF_VSN).tar.gz ; \
+		cd $(DEV_DIR)/deps ; \
+		tar zxvf $(PROTOBUF_VSN).tar.gz ; \
+		cd $(PROTOBUF_VSN) ; \
+		./configure --prefix=$(PROTOBUF_HOME); \
+		make ; \
+		make install ; \
+	fi
+
+get-deps:   deps-protobuf
